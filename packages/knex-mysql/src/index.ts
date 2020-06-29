@@ -17,6 +17,7 @@ export function getKnexInstance(
     const conn = new ConnectionString(connection);
     const mySqlConfig: MySqlConnectionConfig = {
       host: conn.hostname,
+      port: conn.port,
       user: conn.user,
       password: conn.password,
       database: conn.path?.[0],
