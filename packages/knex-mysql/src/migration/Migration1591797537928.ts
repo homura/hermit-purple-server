@@ -3,7 +3,8 @@ import { getKnexInstance, TableNames } from '../';
 import { IMigration } from './run';
 
 export class Migration1591797537928 implements IMigration {
-  constructor(private knex: Knex = getKnexInstance()) {}
+  constructor(private knex: Knex = getKnexInstance()) {
+  }
 
   up() {
     return this.knex.schema
@@ -63,7 +64,7 @@ export class Migration1591797537928 implements IMigration {
           .specificType('validator_version', 'varchar(18) NOT NULL')
           .comment(
             'When the attributes of the validator set or the validator set change, ' +
-              'the validatorVersion will change together',
+            'the validatorVersion will change together',
           );
       })
       .createTable(TableNames.TRANSACTION, (table) => {
@@ -95,8 +96,8 @@ export class Migration1591797537928 implements IMigration {
           .specificType('pubkey', 'varchar(552) NOT NULL')
           .comment(
             'Signature public keys, ' +
-              'it is an RPL-encoded array of public keys, ' +
-              'up to 8 public keys in a transaction',
+            'it is an RPL-encoded array of public keys, ' +
+            'up to 8 public keys in a transaction',
           );
 
         table.specificType('service_name', 'varchar(1024) NOT NULL');
@@ -105,7 +106,7 @@ export class Migration1591797537928 implements IMigration {
           .specificType('signature', 'varchar(1128) NOT NULL')
           .comment(
             'it is an RPL-encoded array of Secp256k1 signature, ' +
-              'up to 8 signatures in a transaction',
+            'up to 8 signatures in a transaction',
           );
 
         table.specificType('timeout', 'varchar(18) NOT NULL');
@@ -134,9 +135,9 @@ export class Migration1591797537928 implements IMigration {
 
         table.text('data').notNullable();
 
-        table
-          .specificType('tx_hash', 'varchar(66) NOT NULL')
-          .index('idx_event_tx_hash');
+        table.specificType('tx_hash', 'varchar(66) NOT NULL');
+        // now index is not necessary, maybe create index after insert
+        // .index('idx_event_tx_hash');
 
         table.specificType('service', 'varchar(255) NOT NULL');
       })
