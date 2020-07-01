@@ -1,6 +1,6 @@
 {
   "name": "@muta-extra/app-sync",
-  "version": "0.4.0-dev.1",
+  "version": "0.4.0-dev.2",
   "files": [
     "lib"
   ],
@@ -12,7 +12,7 @@
     "dev": "ts-node src"
   },
   "dependencies": {
-    "@muta-extra/knex-mysql": "^0.4.0-dev.1",
-    "@muta-extra/synchronizer": "^0.4.0-dev.1"
+    "@muta-extra/knex-mysql": "^0.4.0-dev.2",
+    "@muta-extra/synchronizer": "^0.4.0-dev.2"
   }
 }

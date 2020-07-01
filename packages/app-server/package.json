@@ -1,6 +1,6 @@
 {
   "name": "@muta-extra/app-server",
-  "version": "0.4.0-dev.1",
+  "version": "0.4.0-dev.2",
   "bin": {
     "muta-extra-server": "lib/index.js"
   },
@@ -12,9 +12,9 @@
     "dev": "ts-node src"
   },
   "dependencies": {
-    "@muta-extra/common": "^0.4.0-dev.1",
-    "@muta-extra/knex-mysql": "^0.4.0-dev.1",
-    "@muta-extra/nexus-schema": "^0.4.0-dev.1",
+    "@muta-extra/common": "^0.4.0-dev.2",
+    "@muta-extra/knex-mysql": "^0.4.0-dev.2",
+    "@muta-extra/nexus-schema": "^0.4.0-dev.2",
     "apollo-server": "^2.14.3"
   }
 }

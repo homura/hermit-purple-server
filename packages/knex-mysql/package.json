@@ -1,6 +1,6 @@
 {
   "name": "@muta-extra/knex-mysql",
-  "version": "0.4.0-dev.1",
+  "version": "0.4.0-dev.2",
   "main": "./lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -11,12 +11,12 @@
   },
   "scripts": {},
   "dependencies": {
-    "@muta-extra/common": "^0.4.0-dev.1",
-    "@muta-extra/synchronizer": "^0.4.0-dev.1",
+    "@muta-extra/common": "^0.4.0-dev.2",
+    "@muta-extra/synchronizer": "^0.4.0-dev.2",
     "connection-string": "^3.4.1",
     "knex": "^0.21.1",
-    "knex-stringcase": "^1.4.1",
     "knex-on-duplicate-update": "^1.1.3",
+    "knex-stringcase": "^1.4.1",
     "lodash": "^4.17.15",
     "mysql": "^2.18.1",
     "read-pkg-up": "^7.0.1"

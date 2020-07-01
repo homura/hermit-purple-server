@@ -1,13 +1,13 @@
 {
   "name": "@muta-extra/synchronizer",
-  "version": "0.4.0-dev.1",
+  "version": "0.4.0-dev.2",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib"
   ],
   "dependencies": {
-    "@muta-extra/common": "^0.4.0-dev.1",
+    "@muta-extra/common": "^0.4.0-dev.2",
     "axios": "^0.19.2",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.15",
