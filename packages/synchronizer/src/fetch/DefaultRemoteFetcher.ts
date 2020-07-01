@@ -80,6 +80,7 @@ export class DefaultRemoteFetcher implements IFetchRemoteAdapter {
   }
 
   getWholeBlock = async (height: number): Promise<WholeBlock> => {
+    // just pre fetch blocks, await is not necessary here
     this.preFetchRemoteBlocks(height + 1);
 
     if (this.blockTasks.has(height)) {
