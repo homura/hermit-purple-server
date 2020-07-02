@@ -28,6 +28,9 @@
       "path": "./packages/knex-mysql"
     },
     {
+      "path": "./packages/adapter-mongo"
+    },
+    {
       "path": "./packages/graphql-middlewares"
     },
     {
