@@ -17,9 +17,9 @@ interface ExecutedOption {
   readonly rawTransactions: RawTransaction[];
 
   readonly rawReceipts: RawReceipt[];
-}
 
-type TransactionWithoutOrder = Omit<TransactionModel, 'order'>;
+  readonly lastTransactionOrder: number
+}
 
 export class Executed {
   private readonly executed: ExecutedOption;
@@ -61,18 +61,20 @@ export class Executed {
     };
   }
 
-  getTransactions(): TransactionWithoutOrder[] {
+  getTransactions(): TransactionModel[] {
     const block = hexToNum(this.executed.rawBlock.header.height);
-    return this.executed.rawTransactions.map<TransactionWithoutOrder>(tx => ({
+    const startOrder = this.executed.lastTransactionOrder;
+    return this.executed.rawTransactions.map<TransactionModel>((tx, i) => ({
       ...tx,
       from: addressFromPublicKey(tx.pubkey).toString('hex'),
       block,
+      order: startOrder + i + 1,
     }));
   }
 
   getReceipts(): ReceiptModel[] {
     const block = this.height();
-    return this.executed.rawReceipts.map<ReceiptModel>(receipt => ({
+    return this.executed.rawReceipts.map<ReceiptModel>((receipt) => ({
       block: block,
       txHash: receipt.txHash,
       cyclesUsed: receipt.cyclesUsed,
@@ -82,11 +84,11 @@ export class Executed {
   }
 
   getEvents(): EventModel[] {
-    return this.executed.rawReceipts.flatMap<EventModel>(receipt => {
+    return this.executed.rawReceipts.flatMap<EventModel>((receipt) => {
       const events = receipt.events;
       if (!events || events.length === 0) return [];
 
-      return events.map(e => ({
+      return events.map((e) => ({
         service: e.service,
         data: e.data,
         txHash: receipt.txHash,
@@ -95,7 +97,7 @@ export class Executed {
   }
 
   getValidators(): ValidatorModel[] {
-    return this.executed.rawBlock.header.validators.map(address => ({
+    return this.executed.rawBlock.header.validators.map((address) => ({
       version: this.executed.rawBlock.header.validatorVersion,
       ...address,
     }));

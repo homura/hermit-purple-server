@@ -35,6 +35,8 @@ export interface IFetchLocalAdapter {
    * get local executed block height
    */
   getLocalBlockExecHeight(): Promise<number>;
+
+  getLocalLastTransactionOrder(): Promise<number>;
 }
 
 export interface ISyncEventHandlerAdapter {

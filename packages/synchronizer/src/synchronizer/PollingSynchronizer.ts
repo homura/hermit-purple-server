@@ -15,6 +15,8 @@ export class PollingSynchronizer {
    */
   private remoteHeight: number;
 
+  private localLastTransactionOrder: number;
+
   private adapter: ISynchronizerAdapter;
 
   constructor(
@@ -23,11 +25,14 @@ export class PollingSynchronizer {
   ) {
     this.localHeight = 0;
     this.remoteHeight = 0;
+    this.localLastTransactionOrder = 0;
 
     this.adapter = adapter;
   }
 
   async run() {
+    await this.refreshLocalTransactionOrder();
+
     while (1) {
       try {
         const localHeight = await this.refreshLocalHeight();
@@ -52,6 +57,7 @@ export class PollingSynchronizer {
           localHeight,
         );
         await this.onBlockExecuted(block, txs, receipts);
+        await this.refreshLocalTransactionOrder(block.orderedTxHashes.length);
       } catch (e) {
         error(e);
       }
@@ -69,6 +75,16 @@ export class PollingSynchronizer {
     return this.localHeight;
   }
 
+  private async refreshLocalTransactionOrder(
+    transactionCount: number = 0,
+  ): Promise<number> {
+    if (!this.localLastTransactionOrder) {
+      this.localLastTransactionOrder = await this.adapter.getLocalLastTransactionOrder();
+    }
+    this.localLastTransactionOrder += transactionCount;
+    return this.localLastTransactionOrder;
+  }
+
   private async onBlockExecuted(
     rawBlock: RawBlock,
     transactions: RawTransaction[],
@@ -79,6 +95,7 @@ export class PollingSynchronizer {
         rawBlock,
         rawTransactions: transactions,
         rawReceipts: receipts,
+        lastTransactionOrder: this.localLastTransactionOrder,
       }),
     );
   }
