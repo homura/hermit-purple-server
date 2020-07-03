@@ -1,17 +1,17 @@
-import { BlockModel, TransactionModel } from '@muta-extra/common';
+import { TransactionModel } from '@muta-extra/common';
 import { IFetchLocalAdapter } from '@muta-extra/synchronizer';
-import { Collection } from 'mongodb';
-import { collectionOf } from './';
-import { TableNames } from './constants';
+import { Db } from 'mongodb';
+import { MongoDBHelper, TableNames } from './';
 
 export class DefaultMongoFetcher implements IFetchLocalAdapter {
-  constructor(
-    private blockCollection: Promise<Collection<BlockModel>> = collectionOf<BlockModel>(TableNames.Block),
-  ) {
+  private db: Db;
+
+  constructor(private helper: MongoDBHelper) {
+    this.db = helper.db();
   }
 
   getLocalBlockExecHeight = async (): Promise<number> => {
-    const collection = await this.blockCollection;
+    const collection = this.db.collection(TableNames.Block);
     const [block] = await collection
       .find()
       .sort({ height: -1 })
@@ -22,7 +22,7 @@ export class DefaultMongoFetcher implements IFetchLocalAdapter {
   };
 
   getLocalBlockHeight = async (): Promise<number> => {
-    const collection = await this.blockCollection;
+    const collection = this.db.collection(TableNames.Block);
     const [block] = await collection
       .find()
       .sort({ height: -1 })
@@ -33,7 +33,7 @@ export class DefaultMongoFetcher implements IFetchLocalAdapter {
   };
 
   getLocalLastTransactionOrder = async (): Promise<number> => {
-    const collection = await this.blockCollection;
+    const collection = this.db.collection(TableNames.Transaction);
     const [transaction] = await collection
       .find<TransactionModel>()
       .sort({ order: -1 })

@@ -8,18 +8,30 @@ import {
   ISyncEventHandlerAdapter,
   ISynchronizerAdapter,
   PollingSynchronizer,
-} from "@muta-extra/synchronizer";
-import { DefaultMongoFetcher } from "../DefaultMongoFetcher";
-import { DefaultMongoSyncEventHandler } from "../DefaultMongoSyncEventHandler";
+} from '@muta-extra/synchronizer';
+import {
+  DefaultMongoFetcher,
+  DefaultMongoSyncEventHandler,
+  MongoDBHelper,
+} from '../';
 
-const remoteFetcher: IFetchRemoteAdapter = new DefaultRemoteFetcher();
-const localFetcher: IFetchLocalAdapter = new DefaultMongoFetcher();
-const eventHandler: ISyncEventHandlerAdapter = new DefaultMongoSyncEventHandler();
+async function main() {
+  const helper = new MongoDBHelper();
+  await helper.connect();
 
-const syncAdapter: ISynchronizerAdapter = {
-  ...remoteFetcher,
-  ...localFetcher,
-  ...eventHandler,
-};
+  const remoteFetcher: IFetchRemoteAdapter = new DefaultRemoteFetcher();
+  const localFetcher: IFetchLocalAdapter = new DefaultMongoFetcher(helper);
+  const eventHandler: ISyncEventHandlerAdapter = new DefaultMongoSyncEventHandler(
+    helper,
+  );
 
-new PollingSynchronizer(syncAdapter).run();
+  const syncAdapter: ISynchronizerAdapter = {
+    ...remoteFetcher,
+    ...localFetcher,
+    ...eventHandler,
+  };
+
+  new PollingSynchronizer(syncAdapter).run();
+}
+
+main();

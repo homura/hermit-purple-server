@@ -1,6 +1,13 @@
 #!/usr/bin/env node
-require("@muta-extra/common").loadEnvFile();
+require('@muta-extra/common').loadEnvFile();
 
-import { createRunnableMigrate, Migration001 } from "../migration/Migration001";
+import { MongoDBHelper } from '../';
+import { createRunnableMigrate, Migration001 } from '../migration/Migration001';
 
-createRunnableMigrate(new Migration001());
+async function main() {
+  const helper = new MongoDBHelper();
+  await helper.connect();
+  createRunnableMigrate(new Migration001(helper));
+}
+
+main();
