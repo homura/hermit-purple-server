@@ -1,4 +1,4 @@
-import { Hash, Uint64 } from "@mutajs/types";
+import { Hash, Uint64 } from '@mutadev/types';
 
 export interface ReceiptModel {
   block: number;

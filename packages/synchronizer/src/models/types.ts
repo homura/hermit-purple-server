@@ -1,4 +1,4 @@
-import { Block, Receipt, SignedTransaction } from '@mutajs/client-raw';
+import { Block, Receipt, SignedTransaction } from '@mutadev/client-raw';
 
 export type RawBlock = Pick<Block, 'hash' | 'orderedTxHashes'> & {
   header: Omit<Block['header'], 'orderSignedTransactionsHash'>;

@@ -1,4 +1,4 @@
-import { Hash } from "@mutajs/types";
+import { Hash } from '@mutadev/types';
 
 export interface EventModel {
   service: string;

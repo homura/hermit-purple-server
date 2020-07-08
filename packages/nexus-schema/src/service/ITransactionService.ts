@@ -1,5 +1,5 @@
 import { TransactionModel } from '@muta-extra/common';
-import { Hash } from '@mutajs/types';
+import { Hash } from '@mutadev/types';
 import { QueryManyFn, QueryOneFn } from '../types';
 
 export interface ITransactionService {

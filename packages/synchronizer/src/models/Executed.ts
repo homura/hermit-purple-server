@@ -6,7 +6,7 @@ import {
   utils,
   ValidatorModel,
 } from '@muta-extra/common';
-import { addressFromPublicKey } from '@mutajs/utils';
+import { addressFromPublicKey } from '@mutadev/utils';
 import { RawBlock, RawReceipt, RawTransaction } from './types';
 
 const hexToNum = utils.hexToNum;
@@ -18,7 +18,7 @@ interface ExecutedOption {
 
   readonly rawReceipts: RawReceipt[];
 
-  readonly lastTransactionOrder: number
+  readonly lastTransactionOrder: number;
 }
 
 export class Executed {

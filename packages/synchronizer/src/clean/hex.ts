@@ -2,9 +2,9 @@
 // It is used to ensure the uniformity of hexadecimal
 // data presented in the form of strings.
 
-import { BigNumber } from '@mutajs/shared';
-import { Address, Hash, Uint64 } from '@mutajs/types';
-import { rm0x } from '@mutajs/utils';
+import { BigNumber } from '@mutadev/shared';
+import { Address, Hash, Uint64 } from '@mutadev/types';
+import { rm0x } from '@mutadev/utils';
 import { parse } from 'lossless-json';
 
 export function hexWithout0x(
@@ -24,21 +24,15 @@ export function hexU64(x: string | BigNumber | number): Uint64 {
 }
 
 export function hexUint64(x: string): Uint64 {
-  return rm0x(x)
-    .toLowerCase()
-    .padStart(16, '0');
+  return rm0x(x).toLowerCase().padStart(16, '0');
 }
 
 export function hexHash(x: string): Hash {
-  return rm0x(x)
-    .toLowerCase()
-    .padStart(64, '0');
+  return rm0x(x).toLowerCase().padStart(64, '0');
 }
 
 export function hexAddress(x: string): Address {
-  return rm0x(x)
-    .toLowerCase()
-    .padStart(40, '0');
+  return rm0x(x).toLowerCase().padStart(40, '0');
 }
 
 export function hex(x: string) {

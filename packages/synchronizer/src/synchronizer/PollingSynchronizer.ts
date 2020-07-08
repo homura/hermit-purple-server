@@ -1,4 +1,4 @@
-import { Client } from '@mutajs/client';
+import { Client } from '@mutadev/client';
 import { error, info } from '../logger';
 import { Executed } from '../models/Executed';
 import { RawBlock, RawReceipt, RawTransaction } from '../models/types';

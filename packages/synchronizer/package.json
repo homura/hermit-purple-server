@@ -15,10 +15,10 @@
     "threads": "^1.6.3"
   },
   "peerDependencies": {
-    "@mutajs/client": "^0.11.1-dev.2",
-    "@mutajs/client-raw": "^0.11.1-dev.2",
-    "@mutajs/shared": "^0.11.1-dev.2",
-    "@mutajs/types": "^0.11.1-dev.2",
-    "@mutajs/utils": "^0.11.1-dev.2"
+    "@mutadev/client": "^0.2.0-dev.0",
+    "@mutadev/client-raw": "^0.2.0-dev.0",
+    "@mutadev/shared": "^0.2.0-dev.0",
+    "@mutadev/types": "^0.2.0-dev.0",
+    "@mutadev/utils": "^0.2.0-dev.0"
   }
 }

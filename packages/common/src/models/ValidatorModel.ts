@@ -1,4 +1,4 @@
-import { Address, Uint64 } from "@mutajs/types";
+import { Address, Uint64 } from '@mutadev/types';
 
 export interface ValidatorModel {
   address: Address;

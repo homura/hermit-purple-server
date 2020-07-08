@@ -1,4 +1,4 @@
-import { Address, Bytes, Hash, Uint64 } from "@mutajs/types";
+import { Address, Bytes, Hash, Uint64 } from '@mutadev/types';
 
 export interface TransactionModel {
   order: number;
