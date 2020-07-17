@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Hermit-purple-server by homura</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Hermit-purple-server</h1>
+        <p>Muta APIs</p>
+
+        <p class="view"><a href="https://github.com/homura/hermit-purple-server">View the Project on GitHub <small>homura/hermit-purple-server</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/homura/hermit-purple-server/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/homura/hermit-purple-server/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/homura/hermit-purple-server">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="hermit-purple" class="anchor" href="#hermit-purple" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hermit Purple</h1>
+<p>A GraphQL API server for <a href="https://github.com/nervosnetwork/muta">Muta</a> framework.</p>
+<h2>
+<a id="how-does-it-work" class="anchor" href="#how-does-it-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How does it work?</h2>
+<pre><code>                                   block
+                  +-----------+    tx        +-----------+
+                  |   sync    |    receipt   |   Muta    |
+                  |           &lt;--------------+           |
+                  +-----+-----+              +-----^-----+
+                        |                          |
+                        |                          |
++-----------+        +--v---+                      |
+|  GraphQL  &lt;--------+      |                      |
+|    API    |        |  DB  |                      |
++-----+-----+        |      |                      |
+      |              +------+                      |
+      |                                            |
+      |                                            |
+      |                                            |
+      +--------------------------------------------+
+                     sendTransaction
+
+
+</code></pre>
+<h2>
+<a id="references" class="anchor" href="#references" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References</h2>
+<ul>
+<li><a href="./docs/env.md">config</a></li>
+<li><a href="./docs/deploy.md">deploy</a></li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/homura">homura</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
