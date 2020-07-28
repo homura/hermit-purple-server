@@ -1,6 +1,6 @@
-import { debug, Debugger } from 'debug';
+import { debug as createDebugger, Debugger } from 'debug';
 
-const log = debug('muta:extra');
+const log = createDebugger('muta:extra');
 
 interface Logger {
   /**
@@ -15,11 +15,17 @@ interface Logger {
   childLogger: (namespace: string) => Debugger;
 }
 
-export const logger: Logger = message => {
+export const logger: Logger = (message) => {
   log(message);
 };
 
-logger.childLogger = ns => {
+logger.childLogger = (ns) => {
   ns = ns.startsWith('muta:') ? ns : 'muta:' + ns;
-  return debug(ns);
+  return createDebugger(ns);
 };
+
+export const trace = logger.childLogger('muta:extra:trace');
+export const debug = logger.childLogger('muta:extra:debug');
+export const info = logger.childLogger('muta:extra:info');
+export const warn = logger.childLogger('muta:extra:warn');
+export const error = logger.childLogger('muta:extra:error');
