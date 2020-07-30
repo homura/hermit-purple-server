@@ -6,7 +6,6 @@ import {
   utils,
   ValidatorModel,
 } from '@muta-extra/common';
-import { addressFromPublicKey } from '@mutadev/utils';
 import { RawBlock, RawReceipt, RawTransaction } from './types';
 
 const hexToNum = utils.hexToNum;
@@ -66,7 +65,6 @@ export class Executed {
     const startOrder = this.executed.lastTransactionOrder;
     return this.executed.rawTransactions.map<TransactionModel>((tx, i) => ({
       ...tx,
-      from: addressFromPublicKey(tx.pubkey).toString('hex'),
       block,
       order: startOrder + i + 1,
     }));
