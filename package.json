@@ -14,7 +14,6 @@
   ],
   "version": "0.3.0",
   "scripts": {
-    "start": "node lib/app/server",
     "clean": "rimraf packages/**/lib ./**/*.tsbuildinfo",
     "clean:build": "rimraf packages/**/node_modules packages/**/*.js packages/**/*.d.ts",
     "build": "tsc -b",
@@ -29,7 +28,7 @@
     "graphql": "^14.6.0"
   },
   "devDependencies": {
-    "@mutadev/muta-sdk": "^0.2.0-dev.0",
+    "@mutadev/muta-sdk": "^0.2.0-pr374.3",
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.12",
     "cross-env": "^6.0.3",
