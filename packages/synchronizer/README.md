@@ -13,7 +13,7 @@ Maximum number of concurrent **requests**
 
 ### HERMIT_MAX_PREFETCH_SIZE
 
-Maximum number of concurrent requests for **blocks** 
+Maximum number of concurrent requests for **blocks**
 
 - type: number
 - default: 5
@@ -28,7 +28,7 @@ import {
 
 export function sync() {
   const myAdapter: ISynchronizerAdapter = {
-      // ...
+    // ...
   };
   return new PollingSynchronizer(myAdapter).run();
 }

@@ -66,7 +66,7 @@ export const Block = objectType({
   },
 });
 
-export const blockQuery = queryField(t => {
+export const blockQuery = queryField((t) => {
   t.field('block', {
     type: Block,
     args: {
@@ -88,7 +88,7 @@ export const blockQuery = queryField(t => {
   });
 });
 
-export const blocksPagination = queryField(t => {
+export const blocksPagination = queryField((t) => {
   t.list.field('blocks', {
     type: 'Block',
     args: {

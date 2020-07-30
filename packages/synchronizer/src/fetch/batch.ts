@@ -1,7 +1,7 @@
+import { envStr } from '@muta-extra/common';
 import Axios from 'axios';
 import Bluebird from 'bluebird';
 import { chunk, reduce } from 'lodash';
-import { envStr } from '@muta-extra/common';
 
 const axios = Axios.create({
   baseURL: envStr('MUTA_ENDPOINT', 'http://127.0.0.1:8000/graphql'),

@@ -1,4 +1,4 @@
-import { SourceDataType, hexJSONParse, hexU64, hexAddress } from './hex';
+import { hexAddress, hexJSONParse, hexU64, SourceDataType } from './hex';
 
 test('parse u64', () => {
   expect(hexU64('0')).toBe('0000000000000000');

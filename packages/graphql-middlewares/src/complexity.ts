@@ -30,7 +30,7 @@ export function createListLimitationMiddleware(options: Option) {
       schema: context.getSchema(),
       variables,
       estimators: [
-        options => {
+        (options) => {
           const fieldName = options.field.name;
           const limit = options.args.first || options.args.last;
           const skip = options.args.skip ?? 0;

@@ -32,7 +32,7 @@ export function createRunnableMigrate(migration: IMigration): Command {
 
   program
     .command('run <command>')
-    .action(cmd => runMigration(cmd).then(() => process.exit()));
+    .action((cmd) => runMigration(cmd).then(() => process.exit()));
   program.parse(process.argv);
 
   return program;
