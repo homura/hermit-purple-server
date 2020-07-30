@@ -3,8 +3,7 @@ import { getKnexInstance, TableNames } from '../';
 import { IMigration } from './run';
 
 export class Migration1591797537928 implements IMigration {
-  constructor(private knex: Knex = getKnexInstance()) {
-  }
+  constructor(private knex: Knex = getKnexInstance()) {}
 
   up() {
     return this.knex.schema
@@ -44,7 +43,7 @@ export class Migration1591797537928 implements IMigration {
           .comment('Aggregated signature of validator set');
 
         table
-          .specificType('proposer', 'varchar(42) NOT NULL')
+          .specificType('proposer', 'varchar(68) NOT NULL')
           .comment('Address of the proposer');
 
         table
@@ -64,7 +63,7 @@ export class Migration1591797537928 implements IMigration {
           .specificType('validator_version', 'varchar(18) NOT NULL')
           .comment(
             'When the attributes of the validator set or the validator set change, ' +
-            'the validatorVersion will change together',
+              'the validatorVersion will change together',
           );
       })
       .createTable(TableNames.TRANSACTION, (table) => {
@@ -82,7 +81,7 @@ export class Migration1591797537928 implements IMigration {
 
         table.specificType('cycles_price', 'varchar(18) NOT NULL');
 
-        table.specificType('from', 'varchar(42) NOT NULL');
+        table.specificType('sender', 'varchar(68) NOT NULL');
 
         table.specificType('method', 'varchar(255) NOT NULL');
 
@@ -96,8 +95,8 @@ export class Migration1591797537928 implements IMigration {
           .specificType('pubkey', 'varchar(552) NOT NULL')
           .comment(
             'Signature public keys, ' +
-            'it is an RPL-encoded array of public keys, ' +
-            'up to 8 public keys in a transaction',
+              'it is an RPL-encoded array of public keys, ' +
+              'up to 8 public keys in a transaction',
           );
 
         table.specificType('service_name', 'varchar(1024) NOT NULL');
@@ -106,7 +105,7 @@ export class Migration1591797537928 implements IMigration {
           .specificType('signature', 'varchar(1128) NOT NULL')
           .comment(
             'it is an RPL-encoded array of Secp256k1 signature, ' +
-            'up to 8 signatures in a transaction',
+              'up to 8 signatures in a transaction',
           );
 
         table.specificType('timeout', 'varchar(18) NOT NULL');
@@ -144,7 +143,7 @@ export class Migration1591797537928 implements IMigration {
       .createTable(TableNames.BLOCK_VALIDATOR, (table) => {
         table.increments('id');
 
-        table.specificType('address', 'varchar(42) NOT NULL');
+        table.specificType('pubkey', 'varchar(68) NOT NULL');
 
         table.integer('propose_weight').notNullable();
 
@@ -155,8 +154,8 @@ export class Migration1591797537928 implements IMigration {
         table.integer('vote_weight').notNullable();
 
         table.unique(
-          ['address', 'version'],
-          'uniq_block_validator_address_version',
+          ['pubkey', 'version'],
+          'uniq_block_validator_pubkey_version',
         );
       })
       .createTable(TableNames.ACCOUNT, (table) => {

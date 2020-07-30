@@ -30,7 +30,7 @@ export class DefaultSyncEventHandler implements ISyncEventHandlerAdapter {
         .insert(validator)
         .into(TableNames.BLOCK_VALIDATOR)
         //@ts-ignore
-        .onDuplicateUpdate('address', 'version')
+        .onDuplicateUpdate('pubkey', 'version')
         .transacting(trx);
     }
   }
