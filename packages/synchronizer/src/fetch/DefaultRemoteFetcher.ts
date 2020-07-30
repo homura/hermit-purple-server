@@ -42,12 +42,12 @@ export class DefaultRemoteFetcher implements IFetchRemoteAdapter {
 
   getRemoteBlockHeight = async (): Promise<number> => {
     const block = await this.rawClient.getBlock();
-    return Number(block.getBlock.header.height);
+    return Number(block.getBlock!.header.height);
   };
 
   getRemoteBlockExecHeight = async (): Promise<number> => {
     const block = await this.rawClient.getBlock();
-    return Number(block.getBlock.header.execHeight);
+    return Number(block.getBlock!.header.execHeight);
   };
 
   private async preFetchRemoteBlocks(fromHeight: number) {
