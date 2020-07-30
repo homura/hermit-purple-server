@@ -51,7 +51,7 @@ export const Transaction = objectType({
       description: 'Signature of a transaction',
     });
 
-    t.field('from', { type: 'Address' });
+    t.field('sender', { type: 'Address' });
 
     t.field('receipt', {
       type: 'Receipt',
@@ -63,7 +63,7 @@ export const Transaction = objectType({
   },
 });
 
-export const transactionQuery = queryField(t => {
+export const transactionQuery = queryField((t) => {
   t.field('transaction', {
     type: 'Transaction',
     args: {
@@ -79,7 +79,7 @@ export const transactionQuery = queryField(t => {
   });
 });
 
-export const transactionPagination = queryField(t => {
+export const transactionPagination = queryField((t) => {
   t.list.field('transactions', {
     type: 'Transaction',
     args: {

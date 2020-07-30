@@ -48,19 +48,19 @@ export interface NexusGenRootTypes {
     block: number; // Int!
     cyclesLimit: string; // Uint64!
     cyclesPrice: string; // Uint64!
-    from: string; // Address!
     method: string; // String!
     nonce: string; // Hash!
     order: number; // Int!
     payload: string; // String!
     pubkey: string; // Bytes!
+    sender: string; // Address!
     serviceName: string; // String!
     signature: string; // Bytes!
     txHash: string; // Hash!
   }
   Validator: { // root type
-    address: string; // Address!
     proposeWeight: number; // Int!
+    pubkey: string; // Bytes!
     voteWeight: number; // Int!
   }
   String: string;
@@ -116,20 +116,20 @@ export interface NexusGenFieldTypes {
     block: number; // Int!
     cyclesLimit: string; // Uint64!
     cyclesPrice: string; // Uint64!
-    from: string; // Address!
     method: string; // String!
     nonce: string; // Hash!
     order: number; // Int!
     payload: string; // String!
     pubkey: string; // Bytes!
     receipt: NexusGenRootTypes['Receipt'] | null; // Receipt
+    sender: string; // Address!
     serviceName: string; // String!
     signature: string; // Bytes!
     txHash: string; // Hash!
   }
   Validator: { // field return type
-    address: string; // Address!
     proposeWeight: number; // Int!
+    pubkey: string; // Bytes!
     voteWeight: number; // Int!
   }
 }
