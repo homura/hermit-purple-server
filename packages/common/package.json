@@ -13,6 +13,6 @@
     "read-pkg-up": "^7.0.1"
   },
   "peerDependencies": {
-    "@mutadev/types": "^0.2.0-dev.0"
+    "@mutadev/types": "^0.2.0-pr374.3"
   }
 }

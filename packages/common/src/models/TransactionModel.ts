@@ -3,7 +3,7 @@ import { Address, Bytes, Hash, Uint64 } from '@mutadev/types';
 export interface TransactionModel {
   order: number;
   txHash: Hash;
-  from: Address;
+  sender: Address;
   serviceName: string;
   method: string;
   payload: string;

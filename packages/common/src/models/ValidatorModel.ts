@@ -1,7 +1,7 @@
-import { Address, Uint64 } from '@mutadev/types';
+import { Bytes, Uint64 } from '@mutadev/types';
 
 export interface ValidatorModel {
-  address: Address;
+  pubkey: Bytes;
   proposeWeight: number;
   voteWeight: number;
   version: Uint64;
