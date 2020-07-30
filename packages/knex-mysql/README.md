@@ -41,8 +41,14 @@ A mysql connection url, like `mysql://username:password@localhost:3306/muta`
 - type: string
 - required: true
 
+### HERMIT_CACHE_URL
+
+A redis connection url like `redis://user:secret@localhost:6379/0?foo=bar&qux=baz`,
+checkout [INAN](http://www.iana.org/assignments/uri-schemes/prov/redis) for more information
+
+- type: string
+- required: false
+
 ## Links
 
 - [SQL schema](./docs/schema.sql)
-
-

@@ -50,7 +50,8 @@ export enum TableNames {
   BLOCK_VALIDATOR = 'block_validator',
 }
 
-export * from './helper';
+export * from './helpers/knex';
 export * from './adapters';
 export * from './services';
+export { KnexHelper } from './helpers/KnexHelper';
 export { Knex };

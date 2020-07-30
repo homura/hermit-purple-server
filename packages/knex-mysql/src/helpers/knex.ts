@@ -8,9 +8,9 @@ export function findOne<TRecord extends {} = any>(
   tableName: string,
   where: Partial<TRecord>,
 ): NullablePromise<TRecord> {
-  return knex<TRecord>(tableName)
-    .where(where)
-    .first() as Promise<Maybe<TRecord>>;
+  return knex<TRecord>(tableName).where(where).first() as Promise<
+    Maybe<TRecord>
+  >;
 }
 
 export interface FindManyOption<TRecord extends {} = any> {
@@ -33,9 +33,7 @@ export function buildManyQuery<TRecord extends {} = any>(
 
   const offset = skip ?? 0;
 
-  let builder = knex<TRecord>(tableName)
-    .limit(limit)
-    .offset(offset);
+  let builder = knex<TRecord>(tableName).limit(limit).offset(offset);
 
   if (where) {
     if (typeof where === 'function') {
