@@ -480,13 +480,13 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@mutadev/account@0.2.0-pr374.2":
-  version "0.2.0-pr374.2"
-  resolved "https://registry.yarnpkg.com/@mutadev/account/-/account-0.2.0-pr374.2.tgz#e39b43b5a6f5c0de2ebbf50600b8602ec6278b6b"
-  integrity sha512-jz+StMdramT89D9WnVX9U1Agys71o4TZGeSUCBTQsIFisscKfbETj6MyJvhGfeqH3ZjOHS1EVszgvOho4HQWcw==
+"@mutadev/account@0.2.0-pr374.3":
+  version "0.2.0-pr374.3"
+  resolved "https://registry.yarnpkg.com/@mutadev/account/-/account-0.2.0-pr374.3.tgz#d9d82abbd7db748d773a0bc21f01ba89fa45443e"
+  integrity sha512-9Ti0sDGj7o54ZyDCKgiORGDZMeK8uOK3+QmY200H2zLLouIYpocEoIU31l5cDtwqCMP/SMJNpS1eZFTqzPiM3Q==
   dependencies:
     "@mutadev/defaults" "0.2.0-pr374.2"
-    "@mutadev/utils" "0.2.0-pr374.2"
+    "@mutadev/utils" "0.2.0-pr374.3"
 
 "@mutadev/client-raw@0.2.0-pr374.2":
   version "0.2.0-pr374.2"
@@ -496,17 +496,17 @@
     graphql-request "^1.8.2"
     graphql-tag "^2.10.1"
 
-"@mutadev/client@0.2.0-pr374.2":
-  version "0.2.0-pr374.2"
-  resolved "https://registry.yarnpkg.com/@mutadev/client/-/client-0.2.0-pr374.2.tgz#43c5e210fe4a62e9eda5ecf88d2f1efd08cf0d6b"
-  integrity sha512-zl1oFOnTRilEoQK+4Uhenr3y0VSLm43jZ2Ay7JE+OEnjVwCWtqkJ7FHPzRJBzYgF/+YdL5hEbxQd0aYXevBF9g==
+"@mutadev/client@0.2.0-pr374.3":
+  version "0.2.0-pr374.3"
+  resolved "https://registry.yarnpkg.com/@mutadev/client/-/client-0.2.0-pr374.3.tgz#6befbcf50b9acd52415ad7e97d94ed53aa1f621e"
+  integrity sha512-KnItJDo3dRzqrKKxr9KCx+SuualhHi9OfX+mzOFWO5x4QWi6ymJt4Kkqj66pt4+WI3rMOkQGw+CFuPjqhSirLQ==
   dependencies:
-    "@mutadev/account" "0.2.0-pr374.2"
+    "@mutadev/account" "0.2.0-pr374.3"
     "@mutadev/client-raw" "0.2.0-pr374.2"
     "@mutadev/defaults" "0.2.0-pr374.2"
     "@mutadev/shared" "0.2.0-dev.2"
     "@mutadev/types" "0.2.0-pr374.2"
-    "@mutadev/utils" "0.2.0-pr374.2"
+    "@mutadev/utils" "0.2.0-pr374.3"
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
     p-limit "^2.3.0"
@@ -517,17 +517,17 @@
   resolved "https://registry.yarnpkg.com/@mutadev/defaults/-/defaults-0.2.0-pr374.2.tgz#d28998962ce8becf30dfde4513667148e20406fa"
   integrity sha512-RYISzKgAM0CI3iAju8m3MCWrkK08U9NuSbEHuZL9xJS3aZbS+G5dlK6EbyBLgz7SJ8TXw/Oh2SS+RiXVNh/zZg==
 
-"@mutadev/muta-sdk@^0.2.0-pr374.2":
-  version "0.2.0-pr374.2"
-  resolved "https://registry.yarnpkg.com/@mutadev/muta-sdk/-/muta-sdk-0.2.0-pr374.2.tgz#90770d3fcf49df6c05264ab94e5bed39b79cdc86"
-  integrity sha512-glzGiGVHEJJQM7uPdqkFCJbNrWrSZlXD5urg/q8cXBcK5dNagcxYqrjfeWwlhJiAUbyWU9EXRM8P31EzQ0iScg==
+"@mutadev/muta-sdk@^0.2.0-pr374.3":
+  version "0.2.0-pr374.3"
+  resolved "https://registry.yarnpkg.com/@mutadev/muta-sdk/-/muta-sdk-0.2.0-pr374.3.tgz#71ca16f3b51a359097faf2e538bb12ebc6aafc17"
+  integrity sha512-nuB30quB/+oWtO97H0D+Zgqx+qJ8vx5sR22TCywX/rlxuBA87SxgTPe0rb881e/lJgPa072xfLhhkMIJE5HTMA==
   dependencies:
-    "@mutadev/account" "0.2.0-pr374.2"
-    "@mutadev/client" "0.2.0-pr374.2"
+    "@mutadev/account" "0.2.0-pr374.3"
+    "@mutadev/client" "0.2.0-pr374.3"
     "@mutadev/defaults" "0.2.0-pr374.2"
     "@mutadev/shared" "0.2.0-dev.2"
     "@mutadev/types" "0.2.0-pr374.2"
-    "@mutadev/wallet" "0.2.0-pr374.2"
+    "@mutadev/wallet" "0.2.0-pr374.3"
     utility-types "^3.10.0"
 
 "@mutadev/shared@0.2.0-dev.2":
@@ -546,10 +546,10 @@
   dependencies:
     bignumber.js "^9.0.0"
 
-"@mutadev/utils@0.2.0-pr374.2":
-  version "0.2.0-pr374.2"
-  resolved "https://registry.yarnpkg.com/@mutadev/utils/-/utils-0.2.0-pr374.2.tgz#debb03990dca94d4505c32d7b36291c5ef59d996"
-  integrity sha512-jGUf+HrSclimWgccoQKLVEzG7i+s3EZewJU3KjM4wF0JvHmrarNKrXTOy9ieiM2MHXNCP8ye6Bzkng7GF+5LAg==
+"@mutadev/utils@0.2.0-pr374.3":
+  version "0.2.0-pr374.3"
+  resolved "https://registry.yarnpkg.com/@mutadev/utils/-/utils-0.2.0-pr374.3.tgz#9af194f69e6df2eba9ddae80b02da4b0f8cc6deb"
+  integrity sha512-S9eOsOo5+SBb+3oxY+6b6h3LtG5Kq/JyDsiIjkK60T+fltXtIIx+07130rhm7m3iLU8nuyQUr03SMzb3sz57qA==
   dependencies:
     "@mutadev/defaults" "0.2.0-pr374.2"
     "@mutadev/shared" "0.2.0-dev.2"
@@ -561,13 +561,13 @@
     rlp "^2.2.5"
     secp256k1 "^4.0.0"
 
-"@mutadev/wallet@0.2.0-pr374.2":
-  version "0.2.0-pr374.2"
-  resolved "https://registry.yarnpkg.com/@mutadev/wallet/-/wallet-0.2.0-pr374.2.tgz#2bcade9d50bebd5c697d25e1cd53ed3dc44837b3"
-  integrity sha512-K3a0csjg3Agb5ib0LauxV53ThB7vwmEXHPCb/BfCD9vRV+Oth6LcJAtzMLFXn17zdt6z8Kih+7JxsZI49Kkbgg==
+"@mutadev/wallet@0.2.0-pr374.3":
+  version "0.2.0-pr374.3"
+  resolved "https://registry.yarnpkg.com/@mutadev/wallet/-/wallet-0.2.0-pr374.3.tgz#d804dfadde5f7db2bad5f0b433e984ab6f6cff08"
+  integrity sha512-73XuXKpE3EqqVHNEGxd3wNcNdiejxC0w2TOMP7Yg+X1NLqm+HAKYCCJCtLJ0BRs5UbqFxGgMXZzbpeYG4LU7fw==
   dependencies:
-    "@mutadev/account" "0.2.0-pr374.2"
-    "@mutadev/utils" "0.2.0-pr374.2"
+    "@mutadev/account" "0.2.0-pr374.3"
+    "@mutadev/utils" "0.2.0-pr374.3"
     bip39 "^3.0.2"
     hdkey "^1.1.1"
 
@@ -686,9 +686,9 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/bluebird@^3.5.29":
+"@types/bluebird@^3.5.32":
   version "3.5.32"
-  resolved "https://registry.npmjs.org/@types/bluebird/-/bluebird-3.5.32.tgz#381e7b59e39f010d20bbf7e044e48f5caf1ab620"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.32.tgz#381e7b59e39f010d20bbf7e044e48f5caf1ab620"
   integrity sha512-dIOxFfI0C+jz89g6lQ+TqhGgPQ0MxSnh/E4xuC0blhFtyW269+mPG5QeLgbdwst/LvdP8o1y0o/Gz5EHXLec/g==
 
 "@types/body-parser@*", "@types/body-parser@1.19.0":
@@ -863,6 +863,11 @@
   version "4.14.155"
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.155.tgz#e2b4514f46a261fd11542e47519c20ebce7bc23a"
   integrity sha512-vEcX7S7aPhsBCivxMwAANQburHBtfN9RdyXFk84IJmu2Z4Hkg1tOFgaslRiEqqvoLtbCBi6ika1EMspE+NZ9Lg==
+
+"@types/lodash@^4.14.158":
+  version "4.14.158"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.158.tgz#b38ea8b6fe799acd076d7a8d7ab71c26ef77f785"
+  integrity sha512-InCEXJNTv/59yO4VSfuvNrZHt7eeNtWQEgnieIA+mIC+MOWM9arOWG2eQ8Vhk6NbOre6/BidiXhkZYeDY9U35w==
 
 "@types/long@^4.0.0":
   version "4.0.1"
@@ -3281,7 +3286,7 @@ graphql-upload@^8.0.2:
     http-errors "^1.7.3"
     object-path "^0.11.4"
 
-graphql@^14.0.2, graphql@^14.5.3, graphql@^14.6.0:
+graphql@^14.0.2, graphql@^14.5.3:
   version "14.6.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.6.0.tgz#57822297111e874ea12f5cd4419616930cd83e49"
   integrity sha512-VKzfvHEKybTKjQVpTFrA5yUq2S9ihcZvfJAtsDBBCuV6wauPu1xl/f9ehgVf0FcEJJs4vz6ysb/ZMkGigQZseg==

@@ -20,13 +20,6 @@
     "test": "jest",
     "prepublishOnly": "npm run test && npm run build"
   },
-  "dependencies": {
-    "@types/bluebird": "^3.5.29",
-    "@types/debug": "^4.1.5",
-    "@types/lodash": "^4.14.149",
-    "@types/lossless-json": "^1.0.0",
-    "graphql": "^14.6.0"
-  },
   "devDependencies": {
     "@mutadev/muta-sdk": "^0.2.0-pr374.3",
     "@types/jest": "^26.0.0",

@@ -8,6 +8,9 @@
   ],
   "dependencies": {
     "@muta-extra/common": "0.4.0-dev.3",
+    "@types/bluebird": "^3.5.32",
+    "@types/lossless-json": "^1.0.0",
+    "@types/lodash": "^4.14.158",
     "axios": "^0.19.2",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.15",
