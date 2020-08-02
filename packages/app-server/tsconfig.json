@@ -8,13 +8,7 @@
   },
   "references": [
     {
-      "path": "../common"
-    },
-    {
-      "path": "../nexus-schema"
-    },
-    {
-      "path": "../knex-mysql"
+      "path": "../hermit-purple"
     }
   ]
 }

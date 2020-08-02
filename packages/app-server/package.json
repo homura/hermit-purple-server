@@ -13,9 +13,7 @@
     "dev": "ts-node src"
   },
   "dependencies": {
-    "@muta-extra/common": "0.4.0-dev.3",
-    "@muta-extra/knex-mysql": "0.4.0-dev.3",
-    "@muta-extra/nexus-schema": "0.4.0-dev.3",
+    "@muta-extra/hermit-purple": "0.4.0-dev.3",
     "apollo-server": "^2.14.3"
   }
 }

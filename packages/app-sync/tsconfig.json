@@ -8,13 +8,7 @@
   },
   "references": [
     {
-      "path": "../common"
-    },
-    {
-      "path": "../synchronizer"
-    },
-    {
-      "path": "../knex-mysql"
+      "path": "../hermit-purple"
     }
   ]
 }

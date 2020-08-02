@@ -91,7 +91,6 @@ type Transaction {
 
   """Cycles price, similar to the `gasPrice` in eth"""
   cyclesPrice: Uint64!
-  from: Address!
 
   """Represents what `method` does the transaction called """
   method: String!
@@ -106,6 +105,7 @@ type Transaction {
   """Public key of of a transaction sender"""
   pubkey: Bytes!
   receipt: Receipt
+  sender: Address!
 
   """Represents what `service` does the transaction called """
   serviceName: String!
@@ -121,11 +121,11 @@ type Transaction {
 scalar Uint64
 
 type Validator {
-  """A validator address"""
-  address: Address!
-
   """Propose weight of a validator"""
   proposeWeight: Int!
+
+  """A validator public key"""
+  pubkey: Bytes!
 
   """Vote weight of a validator"""
   voteWeight: Int!
