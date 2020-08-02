@@ -13,6 +13,12 @@ interface Logger {
    * @param namespace
    */
   childLogger: (namespace: string) => Debugger;
+
+  trace: Debugger;
+  debug: Debugger;
+  info: Debugger;
+  warn: Debugger;
+  error: Debugger;
 }
 
 export const logger: Logger = (message) => {
@@ -20,12 +26,21 @@ export const logger: Logger = (message) => {
 };
 
 logger.childLogger = (ns) => {
-  ns = ns.startsWith('muta:') ? ns : 'muta:' + ns;
+  ns =
+    ns.startsWith('muta:') || ns.startsWith('muta-extra:')
+      ? ns
+      : 'muta-extra:' + ns;
   return createDebugger(ns);
 };
 
-export const trace = logger.childLogger('muta:extra:trace');
-export const debug = logger.childLogger('muta:extra:debug');
-export const info = logger.childLogger('muta:extra:info');
-export const warn = logger.childLogger('muta:extra:warn');
-export const error = logger.childLogger('muta:extra:error');
+export const trace = logger.childLogger('trace');
+export const debug = logger.childLogger('debug');
+export const info = logger.childLogger('info');
+export const warn = logger.childLogger('warn');
+export const error = logger.childLogger('error');
+
+logger.trace = trace;
+logger.debug = debug;
+logger.info = info;
+logger.warn = warn;
+logger.error = error;
