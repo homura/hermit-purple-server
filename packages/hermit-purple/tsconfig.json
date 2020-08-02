@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.json",
+  "exclude": ["**/*.test.ts", "**/*.e2e.ts"],
+  "include": ["src"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib"
+  },
+  "references": [
+    {
+      "path": "../common"
+    },
+    {
+      "path": "../knex-mysql"
+    },
+    {
+      "path": "../nexus-schema"
+    },
+    {
+      "path": "../synchronizer"
+    }
+  ]
+}
