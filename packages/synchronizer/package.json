@@ -1,6 +1,6 @@
 {
   "name": "@muta-extra/synchronizer",
-  "version": "0.4.0-dev.3",
+  "version": "0.4.0-dev.4",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -8,10 +8,10 @@
     "src"
   ],
   "dependencies": {
-    "@muta-extra/common": "0.4.0-dev.3",
+    "@muta-extra/common": "0.4.0-dev.4",
     "@types/bluebird": "^3.5.32",
-    "@types/lossless-json": "^1.0.0",
     "@types/lodash": "^4.14.158",
+    "@types/lossless-json": "^1.0.0",
     "axios": "^0.19.2",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.15",

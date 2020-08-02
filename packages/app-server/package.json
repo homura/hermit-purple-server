@@ -1,6 +1,6 @@
 {
   "name": "@muta-extra/app-server",
-  "version": "0.4.0-dev.3",
+  "version": "0.4.0-dev.4",
   "bin": {
     "muta-extra-server": "lib/index.js"
   },
@@ -13,7 +13,7 @@
     "dev": "ts-node src"
   },
   "dependencies": {
-    "@muta-extra/hermit-purple": "0.4.0-dev.3",
+    "@muta-extra/hermit-purple": "0.4.0-dev.4",
     "apollo-server": "^2.14.3"
   }
 }
