@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 require('@muta-extra/common').loadEnvFile();
 
-import { Migration1591797537928 } from '../migration/Migration1591797537928';
-import { createRunnableMigrate } from '../migration/run';
+import { Migration001 } from '../migration/Migration001';
+import { createMigration } from '../migration/run';
 
-createRunnableMigrate(new Migration1591797537928());
+createMigration(new Migration001());

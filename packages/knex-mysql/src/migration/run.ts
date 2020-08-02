@@ -7,7 +7,7 @@ export interface IMigration {
   down(): Knex.SchemaBuilder;
 }
 
-export function createRunnableMigrate(migration: IMigration): Command {
+export function createMigration(migration: IMigration): Command {
   async function runMigration(cmd: string) {
     if (!cmd.startsWith('migration')) {
       console.error(`try to run migration`);

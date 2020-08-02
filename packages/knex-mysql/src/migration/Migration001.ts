@@ -2,7 +2,7 @@ import Knex from 'knex';
 import { getKnexInstance, TableNames } from '../';
 import { IMigration } from './run';
 
-export class Migration1591797537928 implements IMigration {
+export class Migration001 implements IMigration {
   constructor(private knex: Knex = getKnexInstance()) {}
 
   up() {

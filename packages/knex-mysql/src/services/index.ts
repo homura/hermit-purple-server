@@ -16,7 +16,6 @@ import {
   IValidatorService,
 } from '@muta-extra/nexus-schema';
 import { caching } from 'cache-manager';
-import Knex from 'knex';
 import { getKnexInstance, TableNames } from '../';
 import { CacheWrapper } from '../helpers/CacheWrapper';
 import { KnexHelper, KnexHelperOptions } from '../helpers/KnexHelper';
@@ -56,20 +55,26 @@ export class DefaultService implements IService {
   transactionService: ITransactionService;
   validatorService: IValidatorService;
 
-  constructor(private knex: Knex = getKnexInstance()) {
-    const helper = new KnexHelper(knex, getKnexHelperDefaultOptions());
+  readonly helper: KnexHelper;
+
+  constructor(helper?: KnexHelper) {
+    this.helper =
+      helper ||
+      new KnexHelper(getKnexInstance(), getKnexHelperDefaultOptions());
+
+    const thisHelper = this.helper;
 
     this.blockService = {
       async findByHash(txHash) {
-        return helper.findOne<BlockModel>(TableNames.BLOCK, {
+        return thisHelper.findOne<BlockModel>(TableNames.BLOCK, {
           blockHash: txHash,
         });
       },
       findByHeight(height) {
-        return helper.findOne<BlockModel>(TableNames.BLOCK, { height });
+        return thisHelper.findOne<BlockModel>(TableNames.BLOCK, { height });
       },
       filter(args) {
-        return helper.findMany<BlockModel>(TableNames.BLOCK, {
+        return thisHelper.findMany<BlockModel>(TableNames.BLOCK, {
           page: args?.pageArgs,
           orderBy: ['height', 'desc'],
         });
@@ -78,23 +83,23 @@ export class DefaultService implements IService {
 
     this.receiptService = {
       findByTxHash(txHash) {
-        return helper.findOne<ReceiptModel>(TableNames.RECEIPT, { txHash });
+        return thisHelper.findOne<ReceiptModel>(TableNames.RECEIPT, { txHash });
       },
     };
     this.transactionService = {
       findByTxHash(txHash) {
-        return helper.findOne<TransactionModel>(TableNames.TRANSACTION, {
+        return thisHelper.findOne<TransactionModel>(TableNames.TRANSACTION, {
           txHash,
         });
       },
       filter(args) {
-        return helper.findMany<TransactionModel>(TableNames.TRANSACTION, {
+        return thisHelper.findMany<TransactionModel>(TableNames.TRANSACTION, {
           page: args?.pageArgs,
           orderBy: ['order', 'desc'],
         });
       },
       filterByBlockHeight(args) {
-        return helper.findMany<TransactionModel>(TableNames.TRANSACTION, {
+        return thisHelper.findMany<TransactionModel>(TableNames.TRANSACTION, {
           page: args.pageArgs,
           orderBy: ['order', 'desc'],
           where: { block: args.blockHeight },
@@ -104,7 +109,7 @@ export class DefaultService implements IService {
 
     this.validatorService = {
       filterByVersion(version) {
-        return helper.findMany<ValidatorModel>(TableNames.BLOCK_VALIDATOR, {
+        return thisHelper.findMany<ValidatorModel>(TableNames.BLOCK_VALIDATOR, {
           where: { version },
         });
       },

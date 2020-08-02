@@ -1,4 +1,5 @@
 import { Maybe } from '@muta-extra/common';
+import { defaults } from 'lodash';
 import { findMany, FindManyOption, findOne, getKnexInstance, Knex } from '../';
 import { CacheWrapper } from './CacheWrapper';
 
@@ -10,9 +11,13 @@ export class KnexHelper {
   private readonly knex: Knex;
   private readonly cache: CacheWrapper;
 
-  constructor(knex: Knex = getKnexInstance(), options: KnexHelperOptions) {
+  constructor(knex: Knex = getKnexInstance(), options?: KnexHelperOptions) {
     this.knex = knex;
-    this.cache = options.cache;
+    this.cache = defaults(options, { cache: new CacheWrapper() }).cache;
+  }
+
+  getKnexInstance(): Knex {
+    return this.knex;
   }
 
   async findOne<TRecord>(
