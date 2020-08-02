@@ -5,7 +5,8 @@
     "muta-extra-server": "lib/index.js"
   },
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "scripts": {
     "start": "node lib/index.js",

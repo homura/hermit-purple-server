@@ -3,7 +3,8 @@
   "version": "0.4.0-dev.3",
   "main": "./lib/index.js",
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "typings": "./lib/index.d.ts",
   "dependencies": {

@@ -2,7 +2,8 @@
   "name": "@muta-extra/app-sync",
   "version": "0.4.0-dev.3",
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "bin": {
     "muta-extra-sync": "lib/index.js"

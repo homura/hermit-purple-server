@@ -4,7 +4,8 @@
   "main": "./lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "bin": {
     "muta-extra-knex-mysql": "lib/bin/index.js"
