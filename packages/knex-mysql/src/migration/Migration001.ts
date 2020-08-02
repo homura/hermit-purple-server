@@ -157,13 +157,6 @@ export class Migration001 implements IMigration {
           ['pubkey', 'version'],
           'uniq_block_validator_pubkey_version',
         );
-      })
-      .createTable(TableNames.ACCOUNT, (table) => {
-        table.bigIncrements('id');
-
-        table
-          .specificType('address', 'varchar(42) NOT NULL')
-          .unique('uniq_account_address');
       });
   }
 
@@ -173,7 +166,6 @@ export class Migration001 implements IMigration {
       .dropTableIfExists(TableNames.TRANSACTION)
       .dropTableIfExists(TableNames.RECEIPT)
       .dropTableIfExists(TableNames.EVENT)
-      .dropTableIfExists(TableNames.BLOCK_VALIDATOR)
-      .dropTableIfExists(TableNames.ACCOUNT);
+      .dropTableIfExists(TableNames.BLOCK_VALIDATOR);
   }
 }

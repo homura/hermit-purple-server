@@ -46,7 +46,6 @@ export enum TableNames {
   TRANSACTION = 'transaction',
   RECEIPT = 'receipt',
   EVENT = 'event',
-  ACCOUNT = 'account',
   BLOCK_VALIDATOR = 'block_validator',
 }
 
