@@ -9,9 +9,6 @@
   "keywords": [
     "muta"
   ],
-  "files": [
-    "lib"
-  ],
   "version": "0.3.0",
   "scripts": {
     "clean": "rimraf packages/**/lib ./**/*.tsbuildinfo",
