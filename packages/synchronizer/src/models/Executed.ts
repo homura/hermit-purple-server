@@ -89,6 +89,7 @@ export class Executed {
       return events.map((e) => ({
         service: e.service,
         data: e.data,
+        name: e.name,
         txHash: receipt.txHash,
       }));
     });

@@ -139,6 +139,8 @@ export class Migration001 implements IMigration {
         // .index('idx_event_tx_hash');
 
         table.specificType('service', 'varchar(255) NOT NULL');
+
+        table.specificType('name', 'varchar(255) NOT NULL');
       })
       .createTable(TableNames.BLOCK_VALIDATOR, (table) => {
         table.increments('id');
