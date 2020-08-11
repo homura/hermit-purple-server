@@ -32,11 +32,23 @@ export const BytesScalar = stringScalar(
   'Bytes corresponding hex string',
 );
 
+function toHex(v: unknown): string {
+  if (typeof v === 'string') {
+    return v.startsWith('0x') ? v : '0x' + v;
+  } else if (typeof v === 'number' || typeof v === 'bigint') {
+    return '0x' + v.toString(16);
+  } else if (v == null) {
+    return '0x00';
+  }
+
+  throw new Error(v + ' is not a timestamp');
+}
+
 export const TimestampScalar = scalarType({
   name: 'Timestamp',
   description: 'Millisecond timestamp',
   serialize(v) {
-    const timestamp = Number('0x' + v);
+    const timestamp = Number(toHex(v));
     // If it is a timestamp in seconds,
     // it is converted into milliseconds
     if (timestamp < 10000000000) return timestamp * 1000;
