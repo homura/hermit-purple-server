@@ -18,7 +18,7 @@
     "prepublishOnly": "npm run build && npm run test"
   },
   "devDependencies": {
-    "@mutadev/muta-sdk": "^0.2.0-pr374.3",
+    "@mutadev/muta-sdk": "^0.2.0-beta.4",
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.12",
     "cross-env": "^6.0.3",

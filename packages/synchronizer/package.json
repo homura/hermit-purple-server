@@ -19,7 +19,7 @@
     "threads": "^1.6.3"
   },
   "peerDependencies": {
-    "@mutadev/muta-sdk": "^0.2.0-pr374.3",
-    "@mutadev/shared": "^0.2.0-pr374.3"
+    "@mutadev/muta-sdk": "^0.2.0-beta.4",
+    "@mutadev/shared": "^0.2.0-beta.4"
   }
 }
