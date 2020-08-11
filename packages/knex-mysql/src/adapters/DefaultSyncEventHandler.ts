@@ -1,4 +1,10 @@
-import { BlockModel, logger } from '@muta-extra/common';
+import {
+  BlockModel,
+  EventModel,
+  logger,
+  ReceiptModel,
+  TransactionModel,
+} from '@muta-extra/common';
 import { Executed, ISyncEventHandlerAdapter } from '@muta-extra/synchronizer';
 import Knex, { Transaction } from 'knex';
 import { getKnexInstance, TableNames } from '../';
@@ -8,28 +14,41 @@ const info = logger.childLogger('sync:info');
 export class DefaultSyncEventHandler implements ISyncEventHandlerAdapter {
   constructor(protected knex: Knex = getKnexInstance()) {}
 
-  async saveExecutedBlock(trx: Transaction, executed: Executed) {
-    await trx<BlockModel>(TableNames.BLOCK).insert(executed.getBlock());
-    const transactions = executed.getTransactions();
-    const receipts = executed.getReceipts();
+  async saveBlock(trx: Transaction, block: BlockModel) {
+    await trx<BlockModel>(TableNames.BLOCK).insert(block);
+  }
 
-    await this.knex
-      .batchInsert(TableNames.TRANSACTION, transactions)
-      .transacting(trx);
+  async saveTransactions(trx: Transaction, txs: TransactionModel[]) {
+    return trx.batchInsert(TableNames.TRANSACTION, txs);
+  }
+
+  async saveReceipts(trx: Transaction, receipts: ReceiptModel[]) {
+    return trx.batchInsert(TableNames.RECEIPT, receipts);
+  }
+
+  async saveEvents(trx: Transaction, events: EventModel[]) {
+    return trx.batchInsert(TableNames.EVENT, events);
+  }
+
+  async saveExecutedBlock(trx: Transaction, executed: Executed) {
+    await this.saveBlock(trx, executed.getBlock());
+
+    const transactions = executed.getTransactions();
+    await this.saveTransactions(trx, transactions);
     info(`${transactions.length} transactions prepared`);
 
-    await this.knex.batchInsert(TableNames.RECEIPT, receipts).transacting(trx);
+    const receipts = executed.getReceipts();
+    await this.saveReceipts(trx, receipts);
     info(`${receipts.length} receipts prepared`);
 
     const events = executed.getEvents();
-    await this.knex.batchInsert(TableNames.EVENT, events).transacting(trx);
+    await this.saveEvents(trx, events);
     info(`${events.length} events prepared`);
 
     for (let validator of executed.getValidators()) {
       await this.knex
         .insert(validator)
         .into(TableNames.BLOCK_VALIDATOR)
-        //@ts-ignore
         .onDuplicateUpdate('pubkey', 'version')
         .transacting(trx);
     }

@@ -1,6 +1,14 @@
 import { Maybe } from '@muta-extra/common';
+import { QueryBuilder } from 'knex';
 import { defaults } from 'lodash';
-import { findMany, FindManyOption, findOne, getKnexInstance, Knex } from '../';
+import {
+  buildManyQuery,
+  findMany,
+  FindManyOption,
+  findOne,
+  getKnexInstance,
+  Knex,
+} from '../';
 import { CacheWrapper } from './CacheWrapper';
 
 export interface KnexHelperOptions {
@@ -44,5 +52,12 @@ export class KnexHelper {
       },
       () => findMany(this.knex, tableName, options),
     );
+  }
+
+  buildManyQuery<TRecord>(
+    tableName: string,
+    options: FindManyOption<TRecord>,
+  ): QueryBuilder<TRecord> {
+    return buildManyQuery<TRecord>(this.knex, tableName, options);
   }
 }
