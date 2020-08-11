@@ -1,13 +1,13 @@
 {
   "name": "@muta-extra/nexus-schema",
-  "version": "0.4.0-dev.6",
+  "version": "0.4.0-dev.7",
   "main": "lib/index.js",
   "files": [
     "lib",
     "src"
   ],
   "dependencies": {
-    "@muta-extra/common": "^0.4.0-dev.6",
+    "@muta-extra/common": "^0.4.0-dev.7",
     "@nexus/schema": "^0.14.0"
   },
   "devDependencies": {
