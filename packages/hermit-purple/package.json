@@ -1,6 +1,6 @@
 {
   "name": "@muta-extra/hermit-purple",
-  "version": "0.4.0-dev.4",
+  "version": "0.4.0-dev.5",
   "main": "./lib/index.js",
   "files": [
     "lib",
@@ -8,10 +8,10 @@
   ],
   "typings": "./lib/index.d.ts",
   "dependencies": {
-    "@muta-extra/common": "0.4.0-dev.4",
-    "@muta-extra/knex-mysql": "0.4.0-dev.4",
-    "@muta-extra/nexus-schema": "0.4.0-dev.4",
-    "@muta-extra/synchronizer": "0.4.0-dev.4",
+    "@muta-extra/common": "^0.4.0-dev.5",
+    "@muta-extra/knex-mysql": "^0.4.0-dev.5",
+    "@muta-extra/nexus-schema": "^0.4.0-dev.5",
+    "@muta-extra/synchronizer": "^0.4.0-dev.5",
     "schemats": "^3.0.3"
   }
 }
