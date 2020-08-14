@@ -50,9 +50,11 @@ export class CacheWrapper {
       const found = await raw();
       this.cachingTasks.add(hash);
 
-      await this.cacher
-        .set(hash, found, this.ttl)
-        .finally(() => this.cachingTasks.delete(hash));
+      try {
+        await this.cacher.set(hash, found, this.ttl);
+      } finally {
+        this.cachingTasks.delete(hash);
+      }
 
       return found;
     }
