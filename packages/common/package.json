@@ -1,6 +1,6 @@
 {
   "name": "@muta-extra/common",
-  "version": "0.4.0-dev.7",
+  "version": "0.4.0-dev.8",
   "main": "./lib/index.js",
   "files": [
     "lib",
