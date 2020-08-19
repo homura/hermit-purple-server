@@ -1,4 +1,4 @@
-import { GraphQLError, ValidationContext } from 'graphql';
+import { DocumentNode, GraphQLSchema } from 'graphql';
 import { getComplexity } from 'graphql-query-complexity';
 
 interface Option {
@@ -14,62 +14,74 @@ interface Option {
    * max row * column
    */
   maxFieldSize: number;
+
+  /**
+   * default list size
+   */
+  defaultListSize: number;
 }
 
-export function createListLimitationMiddleware(options: Option) {
-  const { fields, maxSkipSize, maxFieldSize } = options;
+class ErrorReporter {
+  #errors: string[] = [];
 
-  const limitationFields = new Set(fields);
+  push(message: string) {
+    this.#errors.push(message);
+  }
 
-  return function complexity<V>(
-    context: ValidationContext,
-    variables: V,
-  ): boolean {
+  getErrors(): string[] {
+    return this.#errors;
+  }
+
+  hasError(): boolean {
+    return this.#errors.length > 0;
+  }
+}
+
+export class ComplexityCalculator<V> {
+  private readonly limitationFields: Set<string>;
+
+  constructor(private schema: GraphQLSchema, private options: Option) {
+    this.limitationFields = new Set(options.fields);
+  }
+
+  calc(query: DocumentNode, variables: V): string | undefined {
+    const { maxSkipSize, maxFieldSize, defaultListSize } = this.options;
+    const limitationFields = this.limitationFields;
+
+    const reporter = new ErrorReporter();
     const complexity = getComplexity({
-      query: context.getDocument(),
-      schema: context.getSchema(),
+      query,
+      schema: this.schema,
       variables,
       estimators: [
         (options) => {
           const fieldName = options.field.name;
-          const limit = options.args.first || options.args.last;
+
+          const limit =
+            options.args.first ?? options.args.last ?? defaultListSize;
           const skip = options.args.skip ?? 0;
 
           if (skip > maxSkipSize) {
-            context.reportError(
-              new GraphQLError(
-                `The maximum skip size is ${maxSkipSize}, ` +
-                  `skip ${skip} "${fieldName}" is not allowed`,
-              ),
+            reporter.push(
+              `The maximum skip size is ${maxSkipSize}, skip ${skip} "${fieldName}" is not allowed`,
             );
           }
 
-          if (limitationFields.has(fieldName) && !limit) {
-            context.reportError(
-              new GraphQLError(
-                `"first" or "last" argument is required in field` +
-                  `"${fieldName}" of type "${options.type.name}"`,
-              ),
-            );
-          }
+          if (!limitationFields.has(fieldName)) return options.childComplexity;
 
-          if (limit) {
-            return (options.childComplexity || 1) * limit;
-          }
-          return options.childComplexity || 1;
+          return limit
+            ? (options.childComplexity || 1) * limit
+            : options.childComplexity || 1;
         },
       ],
     });
 
     if (complexity > maxFieldSize) {
-      context.reportError(
-        new GraphQLError(
-          `The query exceeds the maximum cost of ${maxFieldSize}. ` +
-            `Actual cost is ${complexity}`,
-        ),
+      reporter.push(
+        `The query exceeds the maximum cost of ${maxFieldSize}, actual cost ${complexity}`,
       );
     }
 
-    return context.getErrors().length === 0;
-  };
+    if (reporter.hasError()) return reporter.getErrors().join('\n');
+  }
 }

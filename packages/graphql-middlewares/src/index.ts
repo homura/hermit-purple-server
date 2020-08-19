@@ -1,1 +1,1 @@
-export { createListLimitationMiddleware } from './complexity';
+export { ComplexityCalculator } from './complexity';
