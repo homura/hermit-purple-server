@@ -23,6 +23,12 @@ interface ExecutedOption {
 export class Executed {
   private readonly executed: ExecutedOption;
 
+  #block: BlockModel | undefined;
+  #transactions: TransactionModel[] | undefined;
+  #receipts: ReceiptModel[] | undefined;
+  #events: EventModel[] | undefined;
+  #validators: ValidatorModel[] | undefined;
+
   constructor(executed: ExecutedOption) {
     this.executed = executed;
   }
@@ -36,69 +42,96 @@ export class Executed {
   }
 
   getBlock(): BlockModel {
-    const {
-      rawBlock: rawBlock,
-      rawTransactions: rawTransactions,
-    } = this.executed;
+    if (!this.#block) {
+      const {
+        rawBlock: rawBlock,
+        rawTransactions: rawTransactions,
+      } = this.executed;
 
-    const header = rawBlock.header;
+      const header = rawBlock.header;
 
-    return {
-      blockHash: rawBlock.hash,
-      height: hexToNum(header.height),
-      execHeight: hexToNum(header.execHeight),
-      transactionsCount: rawTransactions.length,
-      timestamp: header.timestamp,
-      orderRoot: header.orderRoot,
-      stateRoot: header.stateRoot,
-      proposer: header.proposer,
-      proofBitmap: header.proof.bitmap,
-      proofRound: header.proof.round,
-      proofSignature: header.proof.signature,
-      prevHash: header.prevHash,
-      validatorVersion: header.validatorVersion,
-    };
+      this.#block = {
+        blockHash: rawBlock.hash,
+        height: hexToNum(header.height),
+        execHeight: hexToNum(header.execHeight),
+        transactionsCount: rawTransactions.length,
+        timestamp: header.timestamp,
+        orderRoot: header.orderRoot,
+        stateRoot: header.stateRoot,
+        proposer: header.proposer,
+        proofBitmap: header.proof.bitmap,
+        proofRound: header.proof.round,
+        proofSignature: header.proof.signature,
+        prevHash: header.prevHash,
+        validatorVersion: header.validatorVersion,
+      };
+    }
+
+    return this.#block;
   }
 
   getTransactions(): TransactionModel[] {
-    const block = hexToNum(this.executed.rawBlock.header.height);
-    const startOrder = this.executed.lastTransactionOrder;
-    return this.executed.rawTransactions.map<TransactionModel>((tx, i) => ({
-      ...tx,
-      block,
-      order: startOrder + i + 1,
-    }));
+    if (!this.#transactions) {
+      const block = hexToNum(this.executed.rawBlock.header.height);
+      const startOrder = this.executed.lastTransactionOrder;
+      this.#transactions = this.executed.rawTransactions.map<TransactionModel>(
+        (tx, i) => ({
+          ...tx,
+          block,
+          order: startOrder + i + 1,
+        }),
+      );
+    }
+    return this.#transactions;
   }
 
   getReceipts(): ReceiptModel[] {
-    const block = this.height();
-    return this.executed.rawReceipts.map<ReceiptModel>((receipt) => ({
-      block: block,
-      txHash: receipt.txHash,
-      cyclesUsed: receipt.cyclesUsed,
-      isError: Number(receipt.response.response.code) !== 0,
-      ret: receipt.response.response.succeedData,
-    }));
+    if (!this.#receipts) {
+      const block = this.height();
+      this.#receipts = this.executed.rawReceipts.map<ReceiptModel>(
+        (receipt) => ({
+          block: block,
+          txHash: receipt.txHash,
+          cyclesUsed: receipt.cyclesUsed,
+          isError: Number(receipt.response.response.code) !== 0,
+          ret: receipt.response.response.succeedData,
+        }),
+      );
+    }
+
+    return this.#receipts;
   }
 
   getEvents(): EventModel[] {
-    return this.executed.rawReceipts.flatMap<EventModel>((receipt) => {
-      const events = receipt.events;
-      if (!events || events.length === 0) return [];
+    if (!this.#events) {
+      this.#events = this.executed.rawReceipts.flatMap<EventModel>(
+        (receipt) => {
+          const events = receipt.events;
+          if (!events || events.length === 0) return [];
 
-      return events.map((e) => ({
-        service: e.service,
-        data: e.data,
-        name: e.name,
-        txHash: receipt.txHash,
-      }));
-    });
+          return events.map((e) => ({
+            service: e.service,
+            data: e.data,
+            name: e.name,
+            txHash: receipt.txHash,
+          }));
+        },
+      );
+    }
+
+    return this.#events;
   }
 
   getValidators(): ValidatorModel[] {
-    return this.executed.rawBlock.header.validators.map((address) => ({
-      version: this.executed.rawBlock.header.validatorVersion,
-      ...address,
-    }));
+    if (!this.#validators) {
+      this.#validators = this.executed.rawBlock.header.validators.map(
+        (address) => ({
+          version: this.executed.rawBlock.header.validatorVersion,
+          ...address,
+        }),
+      );
+    }
+
+    return this.#validators;
   }
 }
