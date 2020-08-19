@@ -1,3 +1,4 @@
+import { logger } from '@muta-extra/common';
 import hasher from 'node-object-hash';
 
 interface Hasher {
@@ -52,6 +53,10 @@ export class CacheWrapper {
 
       try {
         await this.cacher.set(hash, found, this.ttl);
+      } catch {
+        logger.debug(
+          `trying to set an undefined to cache with ${arg} - ${hash}`,
+        );
       } finally {
         this.cachingTasks.delete(hash);
       }
