@@ -1,4 +1,10 @@
-import { DocumentNode, GraphQLSchema } from 'graphql';
+import { PluginDefinition } from 'apollo-server-core';
+import {
+  DocumentNode,
+  GraphQLError,
+  GraphQLSchema,
+  separateOperations,
+} from 'graphql';
 import { getComplexity } from 'graphql-query-complexity';
 
 interface Option {
@@ -84,4 +90,27 @@ export class ComplexityCalculator<V> {
 
     if (reporter.hasError()) return reporter.getErrors().join('\n');
   }
+}
+
+export function pluginApollo(
+  schema: GraphQLSchema,
+  option: Option,
+): PluginDefinition {
+  const calculator = new ComplexityCalculator(schema, option);
+  return {
+    requestDidStart: () => {
+      return {
+        validationDidStart(requestContext) {
+          const { request, document } = requestContext;
+
+          const query: DocumentNode = request.operationName
+            ? separateOperations(document!)?.[request.operationName]
+            : document!;
+
+          const error = calculator.calc(query, request.variables);
+          if (error) throw new GraphQLError(error);
+        },
+      };
+    },
+  };
 }

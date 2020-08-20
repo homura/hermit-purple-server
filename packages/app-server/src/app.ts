@@ -1,4 +1,9 @@
-import { envNum, extendService, makeSchema } from '@muta-extra/hermit-purple';
+import {
+  envNum,
+  extendService,
+  makeSchema,
+  pluginApolloComplexity,
+} from '@muta-extra/hermit-purple';
 import { ApolloServer } from 'apollo-server';
 import path from 'path';
 
@@ -11,6 +16,14 @@ const schema = makeSchema({
 });
 
 const server = new ApolloServer({
+  plugins: [
+    pluginApolloComplexity(schema, {
+      fields: ['transactions', 'blocks'],
+      defaultListSize: envNum('HERMIT_DEFAULT_LIST_SIZE', 10),
+      maxFieldSize: envNum('HERMIT_MAX_COMPLEXITY', 500),
+      maxSkipSize: envNum('HERMIT_MAX_SKIP_SIZE', 10000),
+    }),
+  ],
   schema,
   context: extendService({}),
 });

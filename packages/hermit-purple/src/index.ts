@@ -21,6 +21,11 @@ export {
   QueryOneFn,
 } from '@muta-extra/nexus-schema';
 
+export {
+  pluginApollo as pluginApolloComplexity,
+  ComplexityCalculator,
+} from '@muta-extra/graphql-middlewares';
+
 export * from './codegen';
 export * from './service';
 export * from './sync';

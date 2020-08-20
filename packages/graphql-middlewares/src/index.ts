@@ -1,1 +1,1 @@
-export { ComplexityCalculator } from './complexity';
+export *  from './complexity';
