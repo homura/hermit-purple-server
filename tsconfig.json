@@ -40,6 +40,9 @@
     },
     {
       "path": "./packages/hermit-purple"
+    },
+    {
+      "path": "./packages/apm"
     }
   ]
 }

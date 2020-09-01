@@ -1,5 +1,13 @@
+import {
+  c_muta_sync_fetch_second,
+  c_muta_sync_save_second,
+  g_muta_sync_fetched,
+  g_muta_sync_local_height,
+  g_muta_sync_remote_height,
+  Timer,
+} from '@muta-extra/apm';
+import { logger } from '@muta-extra/common';
 import { Client } from '@mutadev/muta-sdk';
-import { error, info } from '../logger';
 import { Executed } from '../models/Executed';
 import { RawBlock, RawReceipt, RawTransaction } from '../models/types';
 import { ISynchronizerAdapter } from './';
@@ -31,35 +39,45 @@ export class PollingSynchronizer {
   }
 
   async run() {
-    await this.refreshLocalTransactionOrder();
+    const txCount = await this.refreshLocalTransactionOrder();
+    g_muta_sync_fetched.labels('transaction').set(txCount);
 
     while (1) {
       try {
         const localHeight = await this.refreshLocalHeight();
+        g_muta_sync_local_height.labels('height').set(localHeight);
+        g_muta_sync_local_height.labels('exec_height').set(localHeight);
 
         if (localHeight === 1) {
           await this.adapter.onGenesis();
         }
 
         const remoteHeight = await this.refreshRemoteHeight();
+        g_muta_sync_remote_height.labels('exec_height');
 
         if (localHeight >= remoteHeight) {
-          info(
+          logger.info(
             `local height: ${localHeight}, remote height: ${remoteHeight}, waiting for remote new block`,
           );
           await this.client.waitForNextNBlock(1);
           continue;
         }
 
-        info(`start: ${localHeight}, end: ${remoteHeight} `);
+        logger.info(`start: ${localHeight}, end: ${remoteHeight} `);
 
+        const fetchTimer = Timer.createAndStart();
         const { block, txs, receipts } = await this.adapter.getWholeBlock(
           localHeight,
         );
+        c_muta_sync_fetch_second.inc(fetchTimer.end());
+
+        const saveTimer = Timer.createAndStart();
         await this.onBlockExecuted(block, txs, receipts);
+        c_muta_sync_save_second.inc(saveTimer.end());
+
         await this.refreshLocalTransactionOrder(block.orderedTxHashes.length);
       } catch (e) {
-        error(e);
+        logger.error(e);
       }
     }
   }

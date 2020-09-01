@@ -1,9 +1,8 @@
-import { envNum } from '@muta-extra/common';
+import { envNum, logger } from '@muta-extra/common';
 import { Client } from '@mutadev/client';
 import { getSdk } from '@mutadev/client-raw';
 import { defaults } from 'lodash';
 import { Pool, spawn, Worker } from 'threads';
-import { info } from '../logger';
 import {
   IFetchRemoteAdapter,
   WholeBlock,
@@ -65,11 +64,11 @@ export class DefaultRemoteFetcher implements IFetchRemoteAdapter {
       this.blockTasks.set(
         currentPreFetchHeight,
         Promise.resolve(
-          this.taskPool.queue<WholeBlock>(async function (
+          this.taskPool.queue<WholeBlock>(async function(
             fetchWholeBlock: IFetchRemoteAdapter['getWholeBlock'],
           ): Promise<WholeBlock> {
             const wholeBlock = await fetchWholeBlock(currentPreFetchHeight);
-            info(
+            logger.info(
               `fetched block: ${currentPreFetchHeight}, transaction: ${wholeBlock.txs.length}`,
             );
             return wholeBlock;
