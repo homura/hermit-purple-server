@@ -12,6 +12,7 @@ module.exports = {
       script: './packages/app-sync/lib/index.js',
       env: {
         ...env,
+        HERMIT_PORT: 4353,
       },
     },
     {
