@@ -1,46 +1,36 @@
 import { debug as createDebugger, Debugger } from 'debug';
 
-const log = createDebugger('muta:extra');
+type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error';
 
-interface Logger {
-  /**
-   * log the message
-   */
-  (message: string): void;
+interface DebuggerOptions {
+  namespace: string;
+  level?: LogLevel;
+  module?: string;
+}
 
-  /**
-   * create a child logger with new namespace like `muta:some_namespace`
-   * @param namespace
-   */
-  childLogger: (namespace: string) => Debugger;
+function createDebuggerWithNamespace(options: DebuggerOptions): Debugger {
+  const { namespace, level = 'info', module = '' } = options || {};
+  return createDebugger(`${namespace}:${level}${module ? ':' + module : ''}`);
+}
 
+export class Logger {
   trace: Debugger;
   debug: Debugger;
   info: Debugger;
   warn: Debugger;
   error: Debugger;
+
+  constructor(private namespace = 'muta-extra', private module?: string) {
+    function createDebugger(level: LogLevel): Debugger {
+      return createDebuggerWithNamespace({ namespace, module, level });
+    }
+
+    this.trace = createDebugger('trace');
+    this.debug = createDebugger('debug');
+    this.info = createDebugger('info');
+    this.warn = createDebugger('warn');
+    this.error = createDebugger('error');
+  }
 }
 
-export const logger: Logger = (message) => {
-  log(message);
-};
-
-logger.childLogger = (ns) => {
-  ns =
-    ns.startsWith('muta:') || ns.startsWith('muta-extra:')
-      ? ns
-      : 'muta-extra:' + ns;
-  return createDebugger(ns);
-};
-
-export const trace = logger.childLogger('trace');
-export const debug = logger.childLogger('debug');
-export const info = logger.childLogger('info');
-export const warn = logger.childLogger('warn');
-export const error = logger.childLogger('error');
-
-logger.trace = trace;
-logger.debug = debug;
-logger.info = info;
-logger.warn = warn;
-logger.error = error;
+export const logger = new Logger();

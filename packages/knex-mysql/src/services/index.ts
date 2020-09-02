@@ -3,7 +3,7 @@ import {
   BlockModel,
   envNum,
   envStr,
-  info,
+  logger,
   ReceiptModel,
   TransactionModel,
   ValidatorModel,
@@ -26,7 +26,7 @@ function getKnexHelperDefaultOptions(): KnexHelperOptions {
   const url = envStr('HERMIT_CACHE_URL', '');
 
   if (!url) {
-    info(`start without cache`);
+    logger.info(`start without cache`);
     return { cache: new CacheWrapper() };
   }
 
@@ -40,7 +40,7 @@ function getKnexHelperDefaultOptions(): KnexHelperOptions {
     Math.floor(envNum('MUTA_CONSENSUS_INTERVAL', 3000) / 1000),
   );
 
-  info(`caching with ${url}, ttl: ${ttl}`);
+  logger.info(`caching with ${url}, ttl: ${ttl}`);
   return {
     cache: new CacheWrapper({
       cacher: caching({ store: redisStore, ttl }),

@@ -9,8 +9,6 @@ import { Executed, ISyncEventHandlerAdapter } from '@muta-extra/synchronizer';
 import Knex, { Transaction } from 'knex';
 import { getKnexInstance, TableNames } from '../';
 
-const info = logger.childLogger('sync:info');
-
 export class DefaultSyncEventHandler implements ISyncEventHandlerAdapter {
   constructor(protected knex: Knex = getKnexInstance()) {}
 
@@ -35,15 +33,15 @@ export class DefaultSyncEventHandler implements ISyncEventHandlerAdapter {
 
     const transactions = executed.getTransactions();
     await this.saveTransactions(trx, transactions);
-    info(`${transactions.length} transactions prepared`);
+    logger.info(`${transactions.length} transactions prepared`);
 
     const receipts = executed.getReceipts();
     await this.saveReceipts(trx, receipts);
-    info(`${receipts.length} receipts prepared`);
+    logger.info(`${receipts.length} receipts prepared`);
 
     const events = executed.getEvents();
     await this.saveEvents(trx, events);
-    info(`${events.length} events prepared`);
+    logger.info(`${events.length} events prepared`);
 
     for (let validator of executed.getValidators()) {
       await this.knex
