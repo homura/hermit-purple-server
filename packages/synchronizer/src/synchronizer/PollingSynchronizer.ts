@@ -1,7 +1,7 @@
 import {
-  c_muta_sync_fetch_second,
-  c_muta_sync_save_second,
-  g_muta_sync_fetched,
+  c_muta_sync_fetch_seconds,
+  c_muta_sync_save_seconds,
+  g_muta_sync_fetch_count,
   g_muta_sync_local_height,
   g_muta_sync_remote_height,
   Timer,
@@ -40,7 +40,7 @@ export class PollingSynchronizer {
 
   async run() {
     const txCount = await this.refreshLocalTransactionOrder();
-    g_muta_sync_fetched.labels('transaction').set(txCount);
+    g_muta_sync_fetch_count.labels('transaction').set(txCount);
 
     while (1) {
       try {
@@ -69,11 +69,11 @@ export class PollingSynchronizer {
         const { block, txs, receipts } = await this.adapter.getWholeBlock(
           localHeight,
         );
-        c_muta_sync_fetch_second.inc(fetchTimer.end());
+        c_muta_sync_fetch_seconds.inc(fetchTimer.end());
 
         const saveTimer = Timer.createAndStart();
         await this.onBlockExecuted(block, txs, receipts);
-        c_muta_sync_save_second.inc(saveTimer.end());
+        c_muta_sync_save_seconds.inc(saveTimer.end());
 
         await this.refreshLocalTransactionOrder(block.orderedTxHashes.length);
       } catch (e) {

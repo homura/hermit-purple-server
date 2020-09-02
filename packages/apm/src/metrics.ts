@@ -7,7 +7,7 @@ export function registerMetric<T extends Metric<string>>(metric: T): T {
   return metric;
 }
 
-export const g_muta_sync_fetched = registerMetric(
+export const g_muta_sync_fetch_count = registerMetric(
   new Gauge({
     name: 'muta_sync_fetch_count',
     help: 'fetched resource count',
@@ -31,18 +31,17 @@ export const g_muta_sync_local_height = registerMetric(
   }),
 );
 
-export const c_muta_sync_fetch_second = registerMetric(
+export const c_muta_sync_fetch_seconds = registerMetric(
   new Counter({
-    name: 'muta_sync_fetch_second',
+    name: 'muta_sync_fetch_seconds',
     help: 'fetch time usage',
   }),
 );
 
-export const c_muta_sync_save_second = registerMetric(
+export const c_muta_sync_save_seconds = registerMetric(
   new Counter({
-    name: 'muta_sync_save_second',
+    name: 'muta_sync_save_seconds',
     help: 'sync time usage',
     labelNames: ['type'],
   }),
 );
-
