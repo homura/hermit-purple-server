@@ -53,7 +53,7 @@ export class PollingSynchronizer {
         }
 
         const remoteHeight = await this.refreshRemoteHeight();
-        g_muta_sync_remote_height.labels('exec_height');
+        g_muta_sync_remote_height.labels('exec_height').set(remoteHeight);
 
         if (localHeight >= remoteHeight) {
           logger.info(
