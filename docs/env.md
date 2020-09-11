@@ -52,3 +52,9 @@
 - type: String
 - default: chain
 - description: Path to forward requests to Muta
+
+## HERMIT_FORCE_UNLOCK
+
+- type: number
+- default: 0
+- description: ensure that only one sync is running at the same time, set to `1` ,set to 1 if you can ensure that only one sync is running.
