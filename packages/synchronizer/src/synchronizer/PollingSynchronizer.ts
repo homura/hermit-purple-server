@@ -6,17 +6,26 @@ import {
   g_muta_sync_remote_height,
   Timer,
 } from '@muta-extra/apm';
-import { logger } from '@muta-extra/common';
+import { envNum, logger } from '@muta-extra/common';
 import { Client } from '@mutadev/muta-sdk';
 import { Executed } from '../models/Executed';
 import { RawBlock, RawReceipt, RawTransaction } from '../models/types';
 import { ISynchronizerAdapter } from './';
+import { ILock, ILocker } from './ILocker';
+
+interface Options {
+  adapter: ISynchronizerAdapter;
+  locker: ILocker;
+  client: Client;
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class PollingSynchronizer {
   /**
    * current local block height
    */
-  private localHeight: number;
+  private localNextHeight: number;
 
   /**
    * latest remote block height
@@ -27,47 +36,65 @@ export class PollingSynchronizer {
 
   private adapter: ISynchronizerAdapter;
 
-  constructor(
-    adapter: ISynchronizerAdapter,
-    private client: Client = new Client(),
-  ) {
-    this.localHeight = 0;
+  private locker: ILocker;
+
+  private client: Client;
+
+  constructor(options: Options) {
+    this.localNextHeight = 0;
     this.remoteHeight = 0;
     this.localLastTransactionOrder = 0;
 
-    this.adapter = adapter;
+    this.adapter = options.adapter;
+    this.locker = options.locker;
+    this.client = options.client;
   }
 
   async run() {
     const txCount = await this.refreshLocalTransactionOrder();
     g_muta_sync_fetch_count.labels('transaction').set(txCount);
 
+    // init multiple sync at the same time would be failed
+    const forceUnlock = !!envNum('HERMIT_FORCE_UNLOCK', 0);
+    await this.locker.initialize(forceUnlock);
+
+    let currentLock: ILock | undefined;
+
     while (1) {
       try {
-        const localHeight = await this.refreshLocalHeight();
-        g_muta_sync_local_height.labels('height').set(localHeight);
-        g_muta_sync_local_height.labels('exec_height').set(localHeight);
+        const localNextHeight = await this.refreshNextTargetHeight();
+        g_muta_sync_local_height.labels('height').set(localNextHeight);
+        g_muta_sync_local_height.labels('exec_height').set(localNextHeight);
 
-        if (localHeight === 1) {
+        if (localNextHeight === 1) {
           await this.adapter.onGenesis();
         }
 
         const remoteHeight = await this.refreshRemoteHeight();
         g_muta_sync_remote_height.labels('exec_height').set(remoteHeight);
 
-        if (localHeight >= remoteHeight) {
+        if (localNextHeight >= remoteHeight) {
           logger.info(
-            `local height: ${localHeight}, remote height: ${remoteHeight}, waiting for remote new block`,
+            `local height: ${localNextHeight}, remote height: ${remoteHeight}, waiting for remote new block`,
           );
           await this.client.waitForNextNBlock(1);
           continue;
         }
 
-        logger.info(`start: ${localHeight}, end: ${remoteHeight} `);
+        currentLock = await this.locker.lock(localNextHeight);
+        if (!currentLock) {
+          logger.warn(
+            `failed to get lock, seems more than one sync is running`,
+          );
+          await sleep(50);
+          continue;
+        }
+
+        logger.info(`start: ${localNextHeight}, end: ${remoteHeight} `);
 
         const fetchTimer = Timer.createAndStart();
         const { block, txs, receipts } = await this.adapter.getWholeBlock(
-          localHeight,
+          localNextHeight,
         );
         c_muta_sync_fetch_seconds.inc(fetchTimer.end());
 
@@ -78,6 +105,13 @@ export class PollingSynchronizer {
         await this.refreshLocalTransactionOrder(block.orderedTxHashes.length);
       } catch (e) {
         logger.error(e);
+      } finally {
+        if (currentLock) {
+          const unlock = await this.locker.unlock(currentLock);
+          if (!unlock) {
+            logger.warn('unlock failed, seems more than one sync running');
+          }
+        }
       }
     }
   }
@@ -88,9 +122,9 @@ export class PollingSynchronizer {
     return this.remoteHeight;
   }
 
-  private async refreshLocalHeight(): Promise<number> {
-    this.localHeight = (await this.adapter.getLocalBlockHeight()) + 1;
-    return this.localHeight;
+  private async refreshNextTargetHeight(): Promise<number> {
+    this.localNextHeight = (await this.adapter.getLocalBlockHeight()) + 1;
+    return this.localNextHeight;
   }
 
   private async refreshLocalTransactionOrder(
