@@ -1,6 +1,8 @@
 import {
   DefaultLocalFetcher,
+  DefaultLocker,
   DefaultSyncEventHandler,
+  getKnexInstance,
   Knex,
 } from '@muta-extra/knex-mysql';
 import {
@@ -11,6 +13,7 @@ import {
   ISynchronizerAdapter,
   PollingSynchronizer,
 } from '@muta-extra/synchronizer';
+import { Client } from '@mutadev/muta-sdk';
 
 export interface SynchronizerContext {
   knex: Knex;
@@ -56,5 +59,9 @@ export function createSynchronizer(options?: Partial<SyncAdapterOptions>) {
     ...remoteFetcher,
     ...eventHandler,
   };
-  return new PollingSynchronizer(adapter);
+  return new PollingSynchronizer({
+    adapter,
+    client: new Client(),
+    locker: new DefaultLocker(getKnexInstance()),
+  });
 }

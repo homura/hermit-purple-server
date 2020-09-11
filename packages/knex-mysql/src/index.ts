@@ -47,10 +47,13 @@ export enum TableNames {
   RECEIPT = 'receipt',
   EVENT = 'event',
   BLOCK_VALIDATOR = 'block_validator',
+
+  SYNC_LOCK = 'sync_lock',
 }
 
 export * from './helpers/knex';
 export * from './adapters';
+export * from './locker';
 export * from './services';
 export { KnexHelper } from './helpers/KnexHelper';
 export { Knex };

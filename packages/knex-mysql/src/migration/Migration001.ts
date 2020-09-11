@@ -159,6 +159,14 @@ export class Migration001 implements IMigration {
           ['pubkey', 'version'],
           'uniq_block_validator_pubkey_version',
         );
+      })
+      .createTable(TableNames.SYNC_LOCK, (table) => {
+        // ensure that only one sync is running at a time
+
+        table.increments('id');
+        table.boolean('locked');
+        table.bigInteger('version').comment('version will be +1 when updated');
+        table.bigInteger('updated_at');
       });
   }
 
@@ -168,6 +176,7 @@ export class Migration001 implements IMigration {
       .dropTableIfExists(TableNames.TRANSACTION)
       .dropTableIfExists(TableNames.RECEIPT)
       .dropTableIfExists(TableNames.EVENT)
-      .dropTableIfExists(TableNames.BLOCK_VALIDATOR);
+      .dropTableIfExists(TableNames.BLOCK_VALIDATOR)
+      .dropTableIfExists(TableNames.SYNC_LOCK);
   }
 }
