@@ -58,8 +58,6 @@ export class PollingSynchronizer {
     const forceUnlock = !!envNum('HERMIT_FORCE_UNLOCK', 0);
     await this.locker.initialize(forceUnlock);
 
-    let currentLock: ILock | undefined;
-
     while (1) {
       try {
         const localNextHeight = await this.refreshNextTargetHeight();
@@ -81,15 +79,6 @@ export class PollingSynchronizer {
           continue;
         }
 
-        currentLock = await this.locker.lock(localNextHeight);
-        if (!currentLock) {
-          logger.warn(
-            `failed to get lock, seems more than one sync is running`,
-          );
-          await sleep(50);
-          continue;
-        }
-
         logger.info(`start: ${localNextHeight}, end: ${remoteHeight} `);
 
         const fetchTimer = Timer.createAndStart();
@@ -98,20 +87,24 @@ export class PollingSynchronizer {
         );
         c_muta_sync_fetch_seconds.inc(fetchTimer.end());
 
+        const currentLock = await this.locker.lock(localNextHeight);
+        if (!currentLock) {
+          logger.warn(
+            `failed to get lock, seems more than one sync is running`,
+          );
+          await sleep(50);
+          continue;
+        }
         const saveTimer = Timer.createAndStart();
-        await this.onBlockExecuted(block, txs, receipts);
+        await this.onBlockExecuted(block, txs, receipts).then(
+          () => this.locker.unlock(currentLock),
+          () => this.locker.revert(currentLock),
+        );
         c_muta_sync_save_seconds.inc(saveTimer.end());
 
         await this.refreshLocalTransactionOrder(block.orderedTxHashes.length);
       } catch (e) {
         logger.error(e);
-      } finally {
-        if (currentLock) {
-          const unlock = await this.locker.unlock(currentLock);
-          if (!unlock) {
-            logger.warn('unlock failed, seems more than one sync running');
-          }
-        }
       }
     }
   }

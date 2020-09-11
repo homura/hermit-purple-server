@@ -135,4 +135,13 @@ export class DefaultLocker implements ILocker {
       { locked: true, version: lock.version },
     );
   }
+
+  async revert(lock: ILock): Promise<ILock | undefined> {
+    this.ensureInitialized();
+
+    return this.updateLock(
+      { locked: false },
+      { locked: true, version: lock.version },
+    );
+  }
 }

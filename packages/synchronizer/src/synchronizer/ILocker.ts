@@ -12,4 +12,6 @@ export interface ILocker {
   lock(version: number): Promise<ILock | undefined>;
 
   unlock(lock: ILock): Promise<ILock | undefined>;
+
+  revert(lock: ILock): Promise<ILock | undefined>;
 }
