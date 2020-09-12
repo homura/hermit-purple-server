@@ -109,7 +109,7 @@ export class DefaultLocker implements ILocker {
       .first();
   }
 
-  private async updateLock(
+  async updateLock(
     update: Partial<LockModel>,
     where?: Partial<LockModel>,
   ): Promise<LockModel | undefined> {
