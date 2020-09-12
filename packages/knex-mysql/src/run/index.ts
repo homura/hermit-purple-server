@@ -13,7 +13,7 @@ async function fixLock() {
   const fetcher = new DefaultLocalFetcher();
 
   const height = await fetcher.getLocalBlockHeight();
-  await locker.forceUnlock(height);
+  await locker.forceUnlock(height + 1);
   console.log('lock was fixed');
 }
 
