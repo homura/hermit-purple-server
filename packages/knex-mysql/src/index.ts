@@ -1,12 +1,9 @@
 import { envStr } from '@muta-extra/common';
 import { ConnectionString } from 'connection-string';
 import Knex, { MySqlConnectionConfig } from 'knex';
-import 'knex-on-duplicate-update';
 import { attachOnDuplicateUpdate } from 'knex-on-duplicate-update';
 
 const knexStringcase = require('knex-stringcase');
-
-attachOnDuplicateUpdate();
 
 let defaultKnex: Knex;
 
@@ -14,6 +11,7 @@ export function getKnexInstance(
   connection: string = envStr('HERMIT_DATABASE_URL', ''),
 ) {
   if (!defaultKnex) {
+    attachOnDuplicateUpdate();
     const conn = new ConnectionString(connection);
     const mySqlConfig: MySqlConnectionConfig = {
       host: conn.hostname,
