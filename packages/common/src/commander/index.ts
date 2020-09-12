@@ -22,7 +22,11 @@ export function createVersionedCommander(
 ): Command {
   loadEnvFile();
   const program = new Command(name);
-  program.version(readPkgUp.sync({ cwd })?.packageJson.version ?? 'unknown');
+  program.version(
+    readPkgUp.sync({ cwd })?.packageJson.version ?? 'unknown',
+    '-v --version',
+    'show current version'
+  );
   return program as Command;
 }
 
