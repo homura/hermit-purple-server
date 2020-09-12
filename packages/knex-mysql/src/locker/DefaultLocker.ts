@@ -50,7 +50,7 @@ export class DefaultLocker implements ILocker {
     return this.lockClient.first();
   }
 
-  async initialize(forceUnlock = false): Promise<LockModel> {
+  async initialize(): Promise<LockModel> {
     assert(
       !this.#initialized,
       `DefaultLocker has initialized, re-initialize is invalid`,
@@ -70,19 +70,14 @@ export class DefaultLocker implements ILocker {
       return freshLock;
     }
 
-    if (lock.locked) {
-      assert(
-        forceUnlock,
-        'failed to initialize sync, last lock is unreleased, \n' +
-          'or you are trying to run multi sync program' +
-          ' to see https://github.com/homura/hermit-purple-server/blob/develop/docs/env.md#hermit_force_unlock' +
-          ' for more information',
-      );
-      await this.updateLock({ locked: false });
-    }
+    assert(
+      !lock.locked,
+      'failed to initialize the locker because of the last lock is unreleased, \n' +
+        ' if you are trying to run multi sync program?',
+    );
 
     this.#initialized = true;
-    return { ...lock, locked: false };
+    return lock;
   }
 
   private ensureInitialized(): void {
@@ -143,5 +138,30 @@ export class DefaultLocker implements ILocker {
       { locked: false },
       { locked: true, version: lock.version },
     );
+  }
+
+  /**
+   * fix the lock, be sure to use this method very carefully
+   */
+  async forceUnlock(localHeight: number = 0) {
+    const targetVersion = localHeight + 1;
+    let lock = await this.getLock();
+
+    if (!lock) {
+      lock = {
+        id: 1,
+        version: targetVersion,
+        locked: false,
+        updatedAt: Date.now(),
+      };
+      await this.lockTable.insert(lock);
+      return;
+    }
+
+    if (!lock.locked && targetVersion === lock.version) {
+      return;
+    }
+
+    await this.updateLock({ locked: false, version: targetVersion });
   }
 }

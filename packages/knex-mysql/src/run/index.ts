@@ -10,24 +10,11 @@ import { IMigration } from '../migration/run';
 
 async function fixLock() {
   const locker = new DefaultLocker(getKnexInstance());
-  let lock = await locker.getLock();
-
   const fetcher = new DefaultLocalFetcher();
+
   const height = await fetcher.getLocalBlockHeight();
-
-  if (!lock) {
-    lock = await locker.initialize();
-    console.log('cannot find lock, create new one');
-  }
-
-  if (!lock.locked && height === lock.version + 1) {
-    console.log(`the lock is fine and doesn't need fixing`);
-    process.exit(0);
-  }
-
-  await locker.updateLock({ locked: false, version: height + 1 });
-  console.log('the lock was fixed');
-  process.exit(0);
+  await locker.forceUnlock(height);
+  console.log('lock was fixed');
 }
 
 type Thunk<T> = () => T;
@@ -38,7 +25,7 @@ interface Options {
 }
 
 const defaultOptions: Required<Options> = {
-  name: '',
+  name: 'muta-extra-knex-mysql',
   migrationThunk: () => new Migration001(),
 };
 
@@ -71,10 +58,7 @@ export function createCLI(options?: Options) {
       process.exit();
     });
 
-  program
-    .command('fix:lock')
-    .description('fix the sync lock')
-    .action(fixLock);
+  program.command('fix:lock').description('fix the sync lock').action(fixLock);
 
   program.parse(process.argv);
 }

@@ -11,7 +11,7 @@ import { Client } from '@mutadev/muta-sdk';
 import { Executed } from '../models/Executed';
 import { RawBlock, RawReceipt, RawTransaction } from '../models/types';
 import { ISynchronizerAdapter } from './';
-import { ILock, ILocker } from './ILocker';
+import { ILocker } from './ILocker';
 
 interface Options {
   adapter: ISynchronizerAdapter;
@@ -36,7 +36,7 @@ export class PollingSynchronizer {
 
   private adapter: ISynchronizerAdapter;
 
-  private locker: ILocker;
+  private readonly locker: ILocker;
 
   private client: Client;
 
@@ -54,9 +54,14 @@ export class PollingSynchronizer {
     const txCount = await this.refreshLocalTransactionOrder();
     g_muta_sync_fetch_count.labels('transaction').set(txCount);
 
-    // init multiple sync at the same time would be failed
-    const forceUnlock = !!envNum('HERMIT_FORCE_UNLOCK', 0);
-    await this.locker.initialize(forceUnlock);
+    // more than one sync programs competing for lock,
+    // which may cause locks to not be released properly.
+    // so when `HERMIT_FORCE_UNLOCK` is found to be set to a non-zero value
+    // the lock is forced to be released.
+    if (envNum('HERMIT_FORCE_UNLOCK', 0)) {
+      await this.locker.forceUnlock(await this.refreshNextTargetHeight());
+    }
+    await this.locker.initialize();
 
     while (1) {
       try {
