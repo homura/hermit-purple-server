@@ -1,6 +1,6 @@
 {
   "name": "@muta-extra/knex-mysql",
-  "version": "0.4.0-dev.12",
+  "version": "0.4.0-dev.13",
   "main": "./lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -12,8 +12,8 @@
   },
   "scripts": {},
   "dependencies": {
-    "@muta-extra/common": "0.4.0-dev.12",
-    "@muta-extra/synchronizer": "0.4.0-dev.12",
+    "@muta-extra/common": "0.4.0-dev.13",
+    "@muta-extra/synchronizer": "0.4.0-dev.13",
     "@types/cache-manager": "^2.10.3",
     "@types/lodash": "^4.14.158",
     "cache-manager": "^3.3.0",
