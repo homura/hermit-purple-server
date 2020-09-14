@@ -59,7 +59,8 @@ export class PollingSynchronizer {
     // so when `HERMIT_FORCE_UNLOCK` is found to be set to a non-zero value
     // the lock is forced to be released.
     if (envNum('HERMIT_FORCE_UNLOCK', 0)) {
-      await this.locker.forceUnlock(await this.refreshNextTargetHeight());
+      const localHeight = await this.refreshNextTargetHeight() - 1;
+      await this.locker.forceUnlock(localHeight);
     }
     await this.locker.initialize();
 
