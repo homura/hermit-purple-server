@@ -1,6 +1,6 @@
 {
   "name": "@muta-extra/graphql-middlewares",
-  "version": "0.4.0-dev.11",
+  "version": "0.4.0-dev.12",
   "main": "./lib/index.js",
   "files": [
     "lib",
