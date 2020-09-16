@@ -80,7 +80,7 @@ export class DefaultRemoteFetcher implements IFetchRemoteAdapter {
 
   getWholeBlock = async (height: number): Promise<WholeBlock> => {
     // since prefetch probably slower than main thread.
-    // Deleting unused tasks to avoid
+    // deleting unused tasks to avoid prefetch queue is always occupied
     this.blockTasks.delete(height - 1);
 
     // just pre fetch blocks, await is not necessary here
