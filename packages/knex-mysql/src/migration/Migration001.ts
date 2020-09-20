@@ -1,5 +1,6 @@
 import Knex from 'knex';
 import { getKnexInstance, TableNames } from '../';
+import { enhanceBuilder } from './MutaTableBuilder';
 import { IMigration } from './run';
 
 export class Migration001 implements IMigration {
@@ -7,153 +8,124 @@ export class Migration001 implements IMigration {
 
   up() {
     return this.knex.schema
-      .createTable(TableNames.BLOCK, (table) => {
-        table.increments('id');
+      .createTable(TableNames.BLOCK, (rawBuilder) => {
+        const table = enhanceBuilder(rawBuilder);
 
         table
           .integer('height')
           .unique('uniq_block_height')
-          .comment('The block height');
+          .comment('block height in decimal');
 
-        table
-          .integer('exec_height')
-          .notNullable()
-          .comment('The executed block height');
+        table.integer('exec_height').comment('exec_height in decimal');
 
-        table
-          .specificType('block_hash', 'varchar(66) NOT NULL UNIQUE')
-          .comment('The block hash');
+        table.hash('block_hash');
 
-        table
-          .specificType('order_root', 'varchar(66) NOT NULL')
-          .comment('Merkle root of ordered transactions');
+        table.hash('order_root');
 
-        table
-          .specificType('prev_hash', 'varchar(66) NOT NULL')
-          .comment('Prev block hash');
+        table.hash('prev_hash');
 
-        table.text('proof_bitmap').comment('Proofed bitmap').notNullable();
+        table.bytes('proof_bitmap');
 
-        table
-          .specificType('proof_round', 'varchar(18) NOT NULL')
-          .comment('Round usage');
+        table.u64('proof_round');
 
-        table
-          .specificType('proof_signature', 'varchar(2050) NOT NULL')
-          .comment('Aggregated signature of validator set');
+        table.bytes('proof_signature', 2050);
 
-        table
-          .specificType('proposer', 'varchar(68) NOT NULL')
-          .comment('Address of the proposer');
+        table.address('proposer');
 
-        table
-          .specificType('state_root', 'varchar(66) NOT NULL')
-          .comment('State merkle root of the block');
+        table.hash('state_root');
 
-        table
-          .specificType('timestamp', 'varchar(18) NOT NULL')
-          .comment('Block timestamp');
+        table.u64('timestamp');
 
         table
           .integer('transactions_count')
           .notNullable()
           .comment('Number of transactions in the block');
 
-        table
-          .specificType('validator_version', 'varchar(18) NOT NULL')
-          .comment(
-            'When the attributes of the validator set or the validator set change, ' +
-              'the validatorVersion will change together',
-          );
+        table.u64('validator_version');
       })
-      .createTable(TableNames.TRANSACTION, (table) => {
-        table.bigIncrements('id');
+      .createTable(TableNames.TRANSACTION, (rawBuilder) => {
+        const table = enhanceBuilder(rawBuilder, {
+          bigIncrements: true,
+          charset: 'utf8mb4',
+        });
 
         table
-          .integer('block')
+          .integer('block_height')
           .index('idx_transaction_block')
           .comment('The block height')
           .notNullable();
 
-        table.specificType('chain_id', 'varchar(66) NOT NULL');
+        table.hash('chain_id');
 
-        table.specificType('cycles_limit', 'varchar(18) NOT NULL');
+        table.u64('cycles_limit');
 
-        table.specificType('cycles_price', 'varchar(18) NOT NULL');
+        table.u64('cycles_price');
 
-        table.specificType('sender', 'varchar(68) NOT NULL');
+        table.address('sender');
 
-        table.specificType('method', 'varchar(255) NOT NULL');
+        table.unfixedText('method');
 
-        table.specificType('nonce', 'varchar(66) NOT NULL');
-
-        table.bigInteger('order').unique('uniq_transaction_order');
-
-        table.specificType('payload', 'LONGTEXT NOT NULL');
+        table.hash('nonce');
 
         table
-          .specificType('pubkey', 'varchar(552) NOT NULL')
-          .comment(
-            'Signature public keys, ' +
-              'it is an RPL-encoded array of public keys, ' +
-              'up to 8 public keys in a transaction',
-          );
+          .bigInteger('sequence')
+          .unique('uniq_transaction_sequence')
+          .comment('transaction sequence number');
 
-        table.specificType('service_name', 'varchar(1024) NOT NULL');
+        table.stringifyData('payload');
+
+        table.bytes('pubkey', 552);
+
+        table.unfixedText('service_name');
 
         table
-          .specificType('signature', 'varchar(1128) NOT NULL')
+          .bytes('signature', 1128)
           .comment(
-            'it is an RPL-encoded array of Secp256k1 signature, ' +
+            'an RPL-encoded array of Secp256k1 signature, ' +
               'up to 8 signatures in a transaction',
           );
 
-        table.specificType('timeout', 'varchar(18) NOT NULL');
+        table.u64('timeout');
 
-        table
-          .specificType('tx_hash', 'varchar(66) NOT NULL')
-          .unique('uniq_transaction_tx_hash');
+        table.hash('tx_hash').unique('uniq_transaction_tx_hash');
       })
-      .createTable(TableNames.RECEIPT, (table) => {
-        table.bigIncrements('id');
+      .createTable(TableNames.RECEIPT, (rawBuilder) => {
+        const table = enhanceBuilder(rawBuilder, {
+          bigIncrements: true,
+          charset: 'utf8mb4',
+        });
 
-        table.integer('block').notNullable();
+        table.integer('block_height').comment('link to block height');
 
-        table.specificType('cycles_used', 'varchar(18) NOT NULL');
+        table.u64('cycles_used');
 
-        table.boolean('is_error').notNullable();
+        table.boolean('is_error').comment('mark the receipt is error');
 
-        table.text('ret').notNullable();
+        table.stringifyData('ret');
 
-        table
-          .specificType('tx_hash', 'varchar(66) NOT NULL')
-          .unique('uniq_receipt_tx_hash');
+        table.hash('tx_hash').unique('uniq_receipt_tx_hash');
       })
-      .createTable(TableNames.EVENT, (table) => {
-        table.bigIncrements('id');
+      .createTable(TableNames.EVENT, (rawBuilder) => {
+        const table = enhanceBuilder(rawBuilder, { bigIncrements: true });
 
-        table.text('data').notNullable();
+        table.stringifyData('data');
 
-        table.specificType('tx_hash', 'varchar(66) NOT NULL');
-        // now index is not necessary, maybe create index after insert
-        // .index('idx_event_tx_hash');
+        table.hash('tx_hash').comment('link to transaction_tx_hash');
 
-        table.specificType('service', 'varchar(255) NOT NULL');
+        table.unfixedText('service');
 
-        table.specificType('name', 'varchar(255) NOT NULL');
+        table.unfixedText('name');
       })
-      .createTable(TableNames.BLOCK_VALIDATOR, (table) => {
-        table.increments('id');
+      .createTable(TableNames.BLOCK_VALIDATOR, (rawBuilder) => {
+        const table = enhanceBuilder(rawBuilder);
 
-        table.specificType('pubkey', 'varchar(68) NOT NULL');
+        table.bytes('pubkey', 68);
 
-        table.integer('propose_weight').notNullable();
+        table.integer('propose_weight').notNullable().comment('propose weight');
 
-        table
-          .specificType('version', 'varchar(18) NOT NULL')
-          .comment('This field will change when the validator changes');
+        table.u64('version');
 
-        table.integer('vote_weight').notNullable();
+        table.integer('vote_weight').notNullable().comment('vote weight');
 
         table.unique(
           ['pubkey', 'version'],
@@ -163,10 +135,10 @@ export class Migration001 implements IMigration {
       .createTable(TableNames.SYNC_LOCK, (table) => {
         // ensure that only one sync is running at a time
 
-        table.increments('id');
-        table.boolean('locked');
+        enhanceBuilder(table);
+        table.boolean('is_locked').comment('true if it is locked');
         table.bigInteger('version').comment('version will be +1 when updated');
-        table.bigInteger('updated_at');
+        table.bigInteger('updated_at').comment('last update since');
       });
   }
 

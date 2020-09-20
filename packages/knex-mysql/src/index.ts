@@ -1,7 +1,8 @@
 import { envStr } from '@muta-extra/common';
 import { ConnectionString } from 'connection-string';
-import Knex, { MySqlConnectionConfig } from 'knex';
+import Knex, { Config, MySqlConnectionConfig } from 'knex';
 import { attachOnDuplicateUpdate } from 'knex-on-duplicate-update';
+import { createReservedKeyTransformer } from './helpers/reserved';
 
 const knexStringcase = require('knex-stringcase');
 
@@ -22,12 +23,16 @@ export function getKnexInstance(
       ...(conn.params ?? {}),
     };
 
-    defaultKnex = Knex(
-      knexStringcase({
-        client: 'mysql',
-        connection: mySqlConfig,
-      }),
-    );
+    const transformer = createReservedKeyTransformer();
+
+    const config: Config = {
+      client: 'mysql',
+      connection: mySqlConfig,
+      wrapIdentifier: transformer.toDBField,
+      postProcessResponse: transformer.fromDBResponse,
+    };
+
+    defaultKnex = Knex(knexStringcase(config));
 
     if (!connection) {
       console.warn(
@@ -40,13 +45,13 @@ export function getKnexInstance(
 }
 
 export enum TableNames {
-  BLOCK = 'block',
-  TRANSACTION = 'transaction',
-  RECEIPT = 'receipt',
-  EVENT = 'event',
-  BLOCK_VALIDATOR = 'block_validator',
+  BLOCK = 't_block',
+  TRANSACTION = 't_transaction',
+  RECEIPT = 't_receipt',
+  EVENT = 't_event',
+  BLOCK_VALIDATOR = 't_block_validator',
 
-  SYNC_LOCK = 'sync_lock',
+  SYNC_LOCK = 't_sync_lock',
 }
 
 export * from './helpers/knex';

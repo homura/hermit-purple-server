@@ -2,7 +2,7 @@ import { assert } from '@muta-extra/common';
 import { TableNames } from '@muta-extra/knex-mysql';
 import { ILock, ILocker } from '@muta-extra/synchronizer';
 import Knex from 'knex';
-import { defaults } from 'lodash';
+import { defaults, isEmpty } from 'lodash';
 
 export interface LockModel extends ILock {
   id: number;
@@ -46,8 +46,9 @@ export class DefaultLocker implements ILocker {
     return this.lockTable.where(this.options.lockIdentity);
   }
 
-  getLock(): Promise<LockModel | undefined> {
-    return this.lockClient.first();
+  async getLock(): Promise<LockModel | undefined> {
+    const lock = await this.lockClient.first();
+    return isEmpty(lock) ? undefined : lock;
   }
 
   async initialize(): Promise<LockModel> {
@@ -59,10 +60,10 @@ export class DefaultLocker implements ILocker {
     const lock = await this.getLock();
 
     if (!lock) {
-      const freshLock = {
+      const freshLock: LockModel = {
         id: 1,
         version: 1,
-        locked: false,
+        isLocked: false,
         updatedAt: Date.now(),
       };
       await this.lockTable.insert(freshLock);
@@ -71,7 +72,7 @@ export class DefaultLocker implements ILocker {
     }
 
     assert(
-      !lock.locked,
+      !lock.isLocked,
       'failed to initialize the locker because of the last lock is unreleased, \n' +
         ' if you are trying to run multi sync program?',
     );
@@ -117,8 +118,8 @@ export class DefaultLocker implements ILocker {
     this.ensureInitialized();
 
     return this.updateLock(
-      { locked: true },
-      { locked: false, version: lockVersion },
+      { isLocked: true },
+      { isLocked: false, version: lockVersion },
     );
   }
 
@@ -126,8 +127,8 @@ export class DefaultLocker implements ILocker {
     this.ensureInitialized();
 
     return this.updateLock(
-      { locked: false, version: lock.version + 1 },
-      { locked: true, version: lock.version },
+      { isLocked: false, version: lock.version + 1 },
+      { isLocked: true, version: lock.version },
     );
   }
 
@@ -135,8 +136,8 @@ export class DefaultLocker implements ILocker {
     this.ensureInitialized();
 
     return this.updateLock(
-      { locked: false },
-      { locked: true, version: lock.version },
+      { isLocked: false },
+      { isLocked: true, version: lock.version },
     );
   }
 
@@ -151,17 +152,17 @@ export class DefaultLocker implements ILocker {
       lock = {
         id: 1,
         version: targetVersion,
-        locked: false,
+        isLocked: false,
         updatedAt: Date.now(),
       };
       await this.lockTable.insert(lock);
       return;
     }
 
-    if (!lock.locked && targetVersion === lock.version) {
+    if (!lock.isLocked && targetVersion === lock.version) {
       return;
     }
 
-    await this.updateLock({ locked: false, version: targetVersion });
+    await this.updateLock({ isLocked: false, version: targetVersion });
   }
 }

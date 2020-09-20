@@ -28,10 +28,10 @@ export class DefaultLocalFetcher implements IFetchLocalAdapter {
     const transaction = await this.knex<TransactionModel>(
       TableNames.TRANSACTION,
     )
-      .select('order')
-      .orderBy('order', 'desc')
+      .select('sequence')
+      .orderBy('sequence', 'desc')
       .limit(1);
 
-    return transaction[0]?.order ?? 0;
+    return transaction[0]?.sequence ?? 0;
   };
 }

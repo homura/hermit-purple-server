@@ -17,7 +17,7 @@ interface ExecutedOption {
 
   readonly rawReceipts: RawReceipt[];
 
-  readonly lastTransactionOrder: number;
+  readonly startSequence: number;
 }
 
 export class Executed {
@@ -73,12 +73,12 @@ export class Executed {
   getTransactions(): TransactionModel[] {
     if (!this.#transactions) {
       const block = hexToNum(this.executed.rawBlock.header.height);
-      const startOrder = this.executed.lastTransactionOrder;
+      const startSequence = this.executed.startSequence;
       this.#transactions = this.executed.rawTransactions.map<TransactionModel>(
         (tx, i) => ({
           ...tx,
-          block,
-          order: startOrder + i + 1,
+          blockHeight: block,
+          sequence: startSequence + i + 1,
         }),
       );
     }
@@ -90,7 +90,7 @@ export class Executed {
       const block = this.height();
       this.#receipts = this.executed.rawReceipts.map<ReceiptModel>(
         (receipt) => ({
-          block: block,
+          blockHeight: block,
           txHash: receipt.txHash,
           cyclesUsed: receipt.cyclesUsed,
           isError: Number(receipt.response.response.code) !== 0,

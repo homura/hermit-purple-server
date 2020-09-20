@@ -19,83 +19,96 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
 }
 
+export interface NexusGenScalars {
+  String: string
+  Int: number
+  Float: number
+  Boolean: boolean
+  ID: string
+  Address: string
+  Bytes: string
+  Hash: string
+  Timestamp: any
+  Uint64: string
+}
+
 export interface NexusGenRootTypes {
   Account: { // root type
-    address: string; // Address!
+    address: NexusGenScalars['Address']; // Address!
   }
   Block: { // root type
-    blockHash: string; // Hash!
+    blockHash: NexusGenScalars['Hash']; // Hash!
     height: number; // Int!
-    orderRoot: string; // Hash!
-    prevHash: string; // Hash!
-    proofBitmap: string; // Bytes!
-    proofRound: string; // Uint64!
-    proofSignature: string; // Bytes!
-    proposer: string; // Address!
-    stateRoot: string; // Hash!
-    timestamp: any; // Timestamp!
+    orderRoot: NexusGenScalars['Hash']; // Hash!
+    prevHash: NexusGenScalars['Hash']; // Hash!
+    proofBitmap: NexusGenScalars['Bytes']; // Bytes!
+    proofRound: NexusGenScalars['Uint64']; // Uint64!
+    proofSignature: NexusGenScalars['Bytes']; // Bytes!
+    proposer: NexusGenScalars['Address']; // Address!
+    stateRoot: NexusGenScalars['Hash']; // Hash!
+    timestamp: NexusGenScalars['Timestamp']; // Timestamp!
     transactionsCount: number; // Int!
-    validatorVersion: string; // Uint64!
+    validatorVersion: NexusGenScalars['Uint64']; // Uint64!
   }
   Event: {};
   Query: {};
   Receipt: { // root type
-    cyclesUsed: string; // Uint64!
+    cyclesUsed: NexusGenScalars['Uint64']; // Uint64!
     isError?: boolean | null; // Boolean
     ret?: string | null; // String
   }
   Transaction: { // root type
-    block: number; // Int!
-    cyclesLimit: string; // Uint64!
-    cyclesPrice: string; // Uint64!
+    blockHeight: number; // Int!
+    cyclesLimit: NexusGenScalars['Uint64']; // Uint64!
+    cyclesPrice: NexusGenScalars['Uint64']; // Uint64!
     method: string; // String!
-    nonce: string; // Hash!
-    order: number; // Int!
+    nonce: NexusGenScalars['Hash']; // Hash!
     payload: string; // String!
-    pubkey: string; // Bytes!
-    sender: string; // Address!
+    pubkey: NexusGenScalars['Bytes']; // Bytes!
+    sender: NexusGenScalars['Address']; // Address!
+    sequence: number; // Int!
     serviceName: string; // String!
-    signature: string; // Bytes!
-    txHash: string; // Hash!
+    signature: NexusGenScalars['Bytes']; // Bytes!
+    txHash: NexusGenScalars['Hash']; // Hash!
   }
   Validator: { // root type
     proposeWeight: number; // Int!
-    pubkey: string; // Bytes!
+    pubkey: NexusGenScalars['Bytes']; // Bytes!
     voteWeight: number; // Int!
   }
-  String: string;
-  Int: number;
-  Float: number;
-  Boolean: boolean;
-  ID: string;
-  Address: string;
-  Bytes: string;
-  Hash: string;
-  Timestamp: any;
-  Uint64: string;
 }
 
 export interface NexusGenAllTypes extends NexusGenRootTypes {
+  String: NexusGenScalars['String'];
+  Int: NexusGenScalars['Int'];
+  Float: NexusGenScalars['Float'];
+  Boolean: NexusGenScalars['Boolean'];
+  ID: NexusGenScalars['ID'];
+  Address: NexusGenScalars['Address'];
+  Bytes: NexusGenScalars['Bytes'];
+  Hash: NexusGenScalars['Hash'];
+  Timestamp: NexusGenScalars['Timestamp'];
+  Uint64: NexusGenScalars['Uint64'];
 }
 
 export interface NexusGenFieldTypes {
   Account: { // field return type
-    address: string; // Address!
+    address: NexusGenScalars['Address']; // Address!
   }
   Block: { // field return type
-    blockHash: string; // Hash!
+    blockHash: NexusGenScalars['Hash']; // Hash!
     height: number; // Int!
-    orderRoot: string; // Hash!
-    prevHash: string; // Hash!
-    proofBitmap: string; // Bytes!
-    proofRound: string; // Uint64!
-    proofSignature: string; // Bytes!
-    proposer: string; // Address!
-    stateRoot: string; // Hash!
-    timestamp: any; // Timestamp!
+    orderRoot: NexusGenScalars['Hash']; // Hash!
+    prevHash: NexusGenScalars['Hash']; // Hash!
+    proofBitmap: NexusGenScalars['Bytes']; // Bytes!
+    proofRound: NexusGenScalars['Uint64']; // Uint64!
+    proofSignature: NexusGenScalars['Bytes']; // Bytes!
+    proposer: NexusGenScalars['Address']; // Address!
+    stateRoot: NexusGenScalars['Hash']; // Hash!
+    timestamp: NexusGenScalars['Timestamp']; // Timestamp!
     transactionsCount: number; // Int!
     validators: NexusGenRootTypes['Validator'][]; // [Validator!]!
-    validatorVersion: string; // Uint64!
+    validatorVersion: NexusGenScalars['Uint64']; // Uint64!
   }
   Event: { // field return type
     data: string; // String!
@@ -108,28 +121,28 @@ export interface NexusGenFieldTypes {
     transactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
   }
   Receipt: { // field return type
-    cyclesUsed: string; // Uint64!
+    cyclesUsed: NexusGenScalars['Uint64']; // Uint64!
     isError: boolean | null; // Boolean
     ret: string | null; // String
   }
   Transaction: { // field return type
-    block: number; // Int!
-    cyclesLimit: string; // Uint64!
-    cyclesPrice: string; // Uint64!
+    blockHeight: number; // Int!
+    cyclesLimit: NexusGenScalars['Uint64']; // Uint64!
+    cyclesPrice: NexusGenScalars['Uint64']; // Uint64!
     method: string; // String!
-    nonce: string; // Hash!
-    order: number; // Int!
+    nonce: NexusGenScalars['Hash']; // Hash!
     payload: string; // String!
-    pubkey: string; // Bytes!
+    pubkey: NexusGenScalars['Bytes']; // Bytes!
     receipt: NexusGenRootTypes['Receipt'] | null; // Receipt
-    sender: string; // Address!
+    sender: NexusGenScalars['Address']; // Address!
+    sequence: number; // Int!
     serviceName: string; // String!
-    signature: string; // Bytes!
-    txHash: string; // Hash!
+    signature: NexusGenScalars['Bytes']; // Bytes!
+    txHash: NexusGenScalars['Hash']; // Hash!
   }
   Validator: { // field return type
     proposeWeight: number; // Int!
-    pubkey: string; // Bytes!
+    pubkey: NexusGenScalars['Bytes']; // Bytes!
     voteWeight: number; // Int!
   }
 }
@@ -137,7 +150,7 @@ export interface NexusGenFieldTypes {
 export interface NexusGenArgTypes {
   Query: {
     block: { // args
-      hash?: string | null; // Hash
+      hash?: NexusGenScalars['Hash'] | null; // Hash
       height?: number | null; // Int
     }
     blocks: { // args
@@ -146,7 +159,7 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
     }
     transaction: { // args
-      txHash?: string | null; // Hash
+      txHash?: NexusGenScalars['Hash'] | null; // Hash
     }
     transactions: { // args
       blockHeight?: number | null; // Int

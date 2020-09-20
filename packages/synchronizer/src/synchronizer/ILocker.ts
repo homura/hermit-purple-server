@@ -1,7 +1,7 @@
 export interface ILock {
   updatedAt: number;
   version: number;
-  locked: boolean;
+  isLocked: boolean;
 }
 
 export interface ILocker {

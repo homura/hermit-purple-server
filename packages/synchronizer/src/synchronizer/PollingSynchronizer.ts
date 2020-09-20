@@ -23,16 +23,19 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class PollingSynchronizer {
   /**
-   * current local block height
+   * the next sync target block height
    */
   private localNextHeight: number;
 
   /**
-   * latest remote block height
+   * the last remote block height
    */
   private remoteHeight: number;
 
-  private localLastTransactionOrder: number;
+  /**
+   * the last local transaction sequence
+   */
+  private transactionSequence: number;
 
   private adapter: ISynchronizerAdapter;
 
@@ -43,26 +46,29 @@ export class PollingSynchronizer {
   constructor(options: Options) {
     this.localNextHeight = 0;
     this.remoteHeight = 0;
-    this.localLastTransactionOrder = 0;
+    this.transactionSequence = 0;
 
     this.adapter = options.adapter;
     this.locker = options.locker;
     this.client = options.client;
   }
 
-  async run() {
-    const txCount = await this.refreshLocalTransactionOrder();
-    g_muta_sync_fetch_count.labels('transaction').set(txCount);
+  async initialize() {
+    this.transactionSequence = await this.adapter.getLocalLastTransactionOrder();
 
     // more than one sync programs competing for lock,
     // which may cause locks to not be released properly.
     // so when `HERMIT_FORCE_UNLOCK` is found to be set to a non-zero value
     // the lock is forced to be released.
     if (envNum('HERMIT_FORCE_UNLOCK', 0)) {
-      const localHeight = await this.refreshNextTargetHeight() - 1;
+      const localHeight = (await this.refreshNextTargetHeight()) - 1;
       await this.locker.forceUnlock(localHeight);
     }
     await this.locker.initialize();
+  }
+
+  async run() {
+    await this.initialize();
 
     while (1) {
       try {
@@ -108,7 +114,10 @@ export class PollingSynchronizer {
         );
         c_muta_sync_save_seconds.inc(saveTimer.end());
 
-        await this.refreshLocalTransactionOrder(block.orderedTxHashes.length);
+        await this.refreshTransactionSequence(block.orderedTxHashes.length);
+        g_muta_sync_fetch_count
+          .labels('transaction')
+          .set(this.transactionSequence);
       } catch (e) {
         logger.error(e);
       }
@@ -126,14 +135,11 @@ export class PollingSynchronizer {
     return this.localNextHeight;
   }
 
-  private async refreshLocalTransactionOrder(
+  private async refreshTransactionSequence(
     transactionCount: number = 0,
   ): Promise<number> {
-    if (!this.localLastTransactionOrder) {
-      this.localLastTransactionOrder = await this.adapter.getLocalLastTransactionOrder();
-    }
-    this.localLastTransactionOrder += transactionCount;
-    return this.localLastTransactionOrder;
+    this.transactionSequence += transactionCount;
+    return this.transactionSequence;
   }
 
   private async onBlockExecuted(
@@ -146,7 +152,7 @@ export class PollingSynchronizer {
         rawBlock,
         rawTransactions: transactions,
         rawReceipts: receipts,
-        lastTransactionOrder: this.localLastTransactionOrder,
+        startSequence: this.transactionSequence,
       }),
     );
   }

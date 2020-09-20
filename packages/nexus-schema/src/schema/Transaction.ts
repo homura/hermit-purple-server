@@ -4,9 +4,9 @@ import { pageArgs } from './pagination';
 export const Transaction = objectType({
   name: 'Transaction',
   definition(t) {
-    t.int('order');
+    t.int('sequence');
 
-    t.int('block');
+    t.int('blockHeight');
 
     t.field('txHash', {
       type: 'Hash',

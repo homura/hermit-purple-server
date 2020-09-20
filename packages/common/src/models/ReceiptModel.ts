@@ -1,7 +1,7 @@
 import { Hash, Uint64 } from '@mutadev/types';
 
 export interface ReceiptModel {
-  block: number;
+  blockHeight: number;
   txHash: Hash;
   isError: boolean;
   ret: string;

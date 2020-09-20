@@ -1,7 +1,7 @@
 import { Address, Bytes, Hash, Uint64 } from '@mutadev/types';
 
 export interface TransactionModel {
-  order: number;
+  sequence: number;
   txHash: Hash;
   sender: Address;
   serviceName: string;
@@ -14,5 +14,5 @@ export interface TransactionModel {
   signature: Bytes;
   chainId: Hash;
   timeout: Uint64;
-  block: number;
+  blockHeight: number;
 }

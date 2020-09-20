@@ -95,14 +95,14 @@ export class DefaultService implements IService {
       filter(args) {
         return thisHelper.findMany<TransactionModel>(TableNames.TRANSACTION, {
           page: args?.pageArgs,
-          orderBy: ['order', 'desc'],
+          orderBy: ['sequence', 'desc'],
         });
       },
       filterByBlockHeight(args) {
         return thisHelper.findMany<TransactionModel>(TableNames.TRANSACTION, {
           page: args.pageArgs,
-          orderBy: ['order', 'desc'],
-          where: { block: args.blockHeight },
+          orderBy: ['sequence', 'desc'],
+          where: { blockHeight: args.blockHeight },
         });
       },
     };
