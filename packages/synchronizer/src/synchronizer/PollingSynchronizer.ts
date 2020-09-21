@@ -110,7 +110,10 @@ export class PollingSynchronizer {
         const saveTimer = Timer.createAndStart();
         await this.onBlockExecuted(block, txs, receipts).then(
           () => this.locker.unlock(currentLock),
-          () => this.locker.revert(currentLock),
+          async (e: Error) => {
+            await this.locker.revert(currentLock);
+            return Promise.reject(e);
+          },
         );
         c_muta_sync_save_seconds.inc(saveTimer.end());
 
