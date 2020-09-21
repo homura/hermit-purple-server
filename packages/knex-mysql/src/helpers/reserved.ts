@@ -1,4 +1,4 @@
-import { defaults, isNil, mapKeys, memoize } from 'lodash';
+import { defaults, isNil, mapKeys } from 'lodash';
 
 const reservedWords = new Set([
   'SELECT',
@@ -728,7 +728,7 @@ interface Options {
 interface ReversedTransformer {
   toDBField(key: string, queryContext: unknown): string;
 
-  fromDBResponse(response: unknown): unknown;
+  fromDBField(key: string): string;
 }
 
 export function createReservedKeyTransformer(
@@ -748,20 +748,18 @@ export function createReservedKeyTransformer(
     );
   }
 
-  const toDBField = memoize((key: string): string => {
+  function toDBField(key: string): string {
     const isReservedWord = reservedWords.has(key.toUpperCase());
     return isReservedWord ? `${op.prefix}${key}` : key;
-  });
+  }
 
-  function fromDBResponse(response: unknown): unknown {
-    if (Array.isArray(response)) {
-      return response.map(convertKeys);
-    }
-    return convertKeys(response);
+  function fromDBField(key: string): string {
+    const shouldParse = key.toLowerCase().startsWith(op.prefix);
+    return shouldParse ? key.substring(op.prefix.length) : key;
   }
 
   return {
     toDBField,
-    fromDBResponse,
+    fromDBField,
   };
 }

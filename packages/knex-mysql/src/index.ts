@@ -1,7 +1,9 @@
 import { envStr } from '@muta-extra/common';
 import { ConnectionString } from 'connection-string';
-import Knex, { Config, MySqlConnectionConfig } from 'knex';
+import Knex, { MySqlConnectionConfig } from 'knex';
 import { attachOnDuplicateUpdate } from 'knex-on-duplicate-update';
+import { compose } from 'lodash/fp';
+import { camelcase, snakecase } from 'stringcase';
 import { createReservedKeyTransformer } from './helpers/reserved';
 
 const knexStringcase = require('knex-stringcase');
@@ -25,12 +27,14 @@ export function getKnexInstance(
 
     const transformer = createReservedKeyTransformer();
 
-    defaultKnex = Knex(knexStringcase({
-      client: 'mysql',
-      connection: mySqlConfig,
-      appWrapIdentifier: transformer.toDBField,
-      appPostProcessResponse: transformer.fromDBResponse,
-    }));
+    defaultKnex = Knex(
+      knexStringcase({
+        client: 'mysql',
+        connection: mySqlConfig,
+        stringcase: compose(snakecase, transformer.toDBField),
+        appStringcase: compose(camelcase, transformer.fromDBField),
+      }),
+    );
 
     if (!connection) {
       console.warn(
