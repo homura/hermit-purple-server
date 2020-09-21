@@ -1,4 +1,4 @@
-import { defaults, mapKeys, memoize } from 'lodash';
+import { defaults, isNil, mapKeys, memoize } from 'lodash';
 
 const reservedWords = new Set([
   'SELECT',
@@ -738,24 +738,27 @@ export function createReservedKeyTransformer(
     prefix: 'f_',
   });
 
-  const convertKeys = (obj: object) =>
-    mapKeys(obj, (value, key) =>
+  function convertKeys<T>(obj: T): unknown {
+    if (isNil(obj)) return obj;
+
+    return mapKeys(obj as Record<string, unknown>, (value, key) =>
       key.toLowerCase().startsWith(op.prefix)
         ? key.substring(op.prefix.length)
         : key,
     );
+  }
 
   const toDBField = memoize((key: string): string => {
     const isReservedWord = reservedWords.has(key.toUpperCase());
     return isReservedWord ? `${op.prefix}${key}` : key;
   });
 
-  const fromDBResponse = (response: unknown): unknown => {
+  function fromDBResponse(response: unknown): unknown {
     if (Array.isArray(response)) {
       return response.map(convertKeys);
     }
-    return convertKeys(response as object);
-  };
+    return convertKeys(response);
+  }
 
   return {
     toDBField,

@@ -25,14 +25,12 @@ export function getKnexInstance(
 
     const transformer = createReservedKeyTransformer();
 
-    const config: Config = {
+    defaultKnex = Knex(knexStringcase({
       client: 'mysql',
       connection: mySqlConfig,
-      wrapIdentifier: transformer.toDBField,
-      postProcessResponse: transformer.fromDBResponse,
-    };
-
-    defaultKnex = Knex(knexStringcase(config));
+      appWrapIdentifier: transformer.toDBField,
+      appPostProcessResponse: transformer.fromDBResponse,
+    }));
 
     if (!connection) {
       console.warn(
